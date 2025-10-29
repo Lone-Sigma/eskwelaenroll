@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Sign Up - EduStaff Hub</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- GLOBAL STYLES & VARIABLES (Light Mode with Green/Teal Palette) --- */
+      :root {
+        /* Base Colors - Adjusted for Light Mode */
+        --primary: #007769; /* Dark Teal Green */
+        --primary-light: #00b4a5; /* Bright Teal */
+        --secondary: #38a3a5; /* Mid Teal */
+        --danger: #ef476f;
+        --dark: #2d3748; /* Dark text/headers */
+        --light: #ffffff; /* Card/Surface white */
+        --border: #e9ecef;
+        --text: var(--dark); /* Main text color (Dark) */
+        --text-light: #718096; /* Light gray text/labels */
+        --shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.08); /* Flatter shadow for modern UI */
+        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --radius: 12px; /* Slightly larger radius */
+        --radius-sm: 8px;
+        --transition: all 0.3s ease;
+
+        /* Background Colors (Light Theme) */
+        --bg-start: #f5f7fa; /* Very Light Gray */
+        --bg-end: #ffffff; /* White */
+        --accent-color: #57cc99; /* Light Mint/Accent Green */
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        /* Light mode background gradient */
+        background: linear-gradient(
+          135deg,
+          var(--bg-start) 0%,
+          var(--bg-end) 100%
+        );
+        color: var(--text); /* Dark text on light background */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* --- HEADER STYLES (Kept for consistency) --- */
+      .header {
+        background-color: var(--light);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+      }
+
+      .logo a {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--dark);
+        text-decoration: none;
+        letter-spacing: -1px;
+        display: flex;
+        align-items: center;
+      }
+      
+      .logo-icon {
+        font-size: 32px;
+        margin-right: 10px;
+        color: var(--accent-color);
+        /* Multi-layer text shadow for depth effect */
+        text-shadow: 
+            1px 1px 0 var(--secondary),
+            2px 2px 0 var(--primary-light),
+            3px 3px 5px rgba(0, 0, 0, 0.3); 
+        transition: transform 0.3s ease;
+      }
+      
+      .logo a:hover .logo-icon {
+          transform: scale(1.05);
+      }
+
+      .logo a:hover {
+          color: var(--primary);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      
+      .nav-links a.nav-link {
+        color: var(--text-light); 
+        text-decoration: none;
+        font-weight: 500;
+        transition: color var(--transition);
+        padding: 5px 0;
+        position: relative;
+        font-size: 14px;
+      }
+      
+      .nav-links a.nav-link:hover {
+          color: var(--dark);
+      }
+      
+      .nav-links a.nav-link:after {
+          content: "";
+          position: absolute;
+          width: 0;
+          height: 2px;
+          display: block;
+          margin-top: 5px;
+          background: var(--accent-color);
+          transition: width var(--transition);
+          left: 50%;
+          transform: translateX(-50%);
+      }
+
+      .nav-links a.nav-link:hover:after {
+          width: 100%;
+      }
+
+      .btn {
+        padding: 8px 18px;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        border: 1px solid transparent;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+
+      .btn-outline {
+        color: var(--dark);
+        border-color: var(--border);
+        background-color: transparent;
+      }
+
+      .btn-outline:hover {
+        background-color: var(--border);
+        border-color: var(--text-light);
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          90deg,
+          var(--accent-color) 0%,
+          var(--primary-light) 100%
+        );
+        color: var(--dark);
+        border: none;
+        box-shadow: 0 4px 15px rgba(87, 204, 153, 0.4);
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(
+          90deg,
+          var(--primary-light) 0%,
+          var(--accent-color) 100%
+        );
+        box-shadow: 0 6px 20px rgba(87, 204, 153, 0.6);
+        transform: translateY(-2px);
+      }
+
+      /* --- MAIN CONTENT & FORM STYLES --- */
+
+      .form-container {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+      }
+
+      .card {
+        background-color: var(--light);
+        padding: 50px; /* Increased padding */
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg); /* Flatter shadow */
+        max-width: 900px; /* Wider for two columns */
+        width: 100%;
+        text-align: center;
+        transition: var(--transition);
+      }
+
+      .card h2 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: var(--primary);
+      }
+
+      .card > p { /* Target direct children <p> */
+        color: var(--text-light);
+        margin-bottom: 30px;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      /* TWO-COLUMN GRID IMPLEMENTATION */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two equal columns */
+        gap: 40px; /* Spacing between columns */
+        margin-bottom: 30px;
+        position: relative;
+        text-align: left;
+      }
+      
+      /* Subtle Vertical Divider */
+      .form-grid::after {
+          content: "";
+          position: absolute;
+          top: 10%;
+          bottom: 10%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 1px;
+          background-color: var(--border); 
+      }
+      
+      /* Section Title for the columns */
+      .section-title-col {
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--primary-light);
+          text-transform: uppercase;
+          margin-bottom: 20px;
+          letter-spacing: 0.5px;
+          border-bottom: 2px solid var(--border);
+          padding-bottom: 8px;
+          margin-top: 10px;
+      }
+
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--dark);
+        margin-bottom: 6px;
+      }
+      
+      .form-group input:not([type="radio"]):not([type="checkbox"]) {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 16px;
+        color: var(--dark);
+        transition: border-color var(--transition), box-shadow var(--transition);
+        /* Flat UI: Ensure background is consistent and clean */
+        background-color: #fcfcfc;
+      }
+
+      .form-group input:not([type="radio"]):not([type="checkbox"]):focus {
+        border-color: var(--primary-light);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(87, 204, 153, 0.3);
+      }
+      
+      /* Horizontal Field Grouping for smaller items like DoB */
+      .input-row {
+          display: flex;
+          gap: 20px;
+      }
+      .input-row .form-group {
+        flex: 1;
+      }
+
+      /* --- CUSTOM RADIO/CHECKBOX STYLES --- */
+      /* Role Selection (4 Options) */
+      .role-selection {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .custom-radio input[type="radio"] {
+        display: none;
+      }
+
+      .custom-radio label {
+        display: block;
+        padding: 10px 5px;
+        background-color: var(--bg-end);
+        border: 1px solid var(--border); /* Slightly thinner border for flat look */
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        color: var(--text-light);
+        font-size: 13px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .custom-radio input[type="radio"]:checked + label {
+        background-color: var(--accent-color);
+        border-color: var(--primary);
+        color: var(--dark);
+        box-shadow: 0 2px 5px rgba(87, 204, 153, 0.3); /* Subtler shadow */
+      }
+
+      /* Checkbox (Terms) style - Full Width */
+      .form-span-full {
+          grid-column: 1 / -1; /* Make elements span both columns */
+          text-align: left;
+      }
+      
+      .checkbox-group {
+          display: flex;
+          align-items: center;
+          margin-top: 20px;
+          margin-bottom: 30px;
+      }
+      
+      .checkbox-group input[type="checkbox"] {
+          /* Hide native checkbox */
+          -webkit-appearance: none;
+          appearance: none;
+          background-color: var(--light);
+          margin: 0;
+          font: inherit;
+          color: currentColor;
+          width: 1.15em;
+          height: 1.15em;
+          border: 2px solid var(--border);
+          border-radius: 3px;
+          transform: translateY(-0.075em);
+          display: grid;
+          place-content: center;
+          transition: var(--transition);
+          margin-right: 10px;
+      }
+
+      .checkbox-group input[type="checkbox"]::before {
+          content: "";
+          width: 0.65em;
+          height: 0.65em;
+          clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 60%);
+          transform: scale(0);
+          opacity: 0;
+          transition: transform 0.1s ease-in, opacity 0.1s ease-in;
+          background-color: var(--dark);
+      }
+
+      .checkbox-group input[type="checkbox"]:checked {
+          background-color: var(--primary-light);
+          border-color: var(--primary);
+      }
+
+      .checkbox-group input[type="checkbox"]:checked::before {
+          transform: scale(1);
+          opacity: 1;
+      }
+      
+      .checkbox-group label {
+          font-size: 14px;
+          color: var(--text-light);
+          font-weight: 400;
+          cursor: pointer;
+      }
+      
+      .checkbox-group label a {
+          color: var(--primary);
+          font-weight: 500;
+          text-decoration: none;
+      }
+
+
+      .form-actions {
+        margin-top: 10px;
+      }
+
+      .form-actions button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .link-text {
+        margin-top: 20px;
+        font-size: 14px;
+        color: var(--text-light);
+      }
+
+      .link-text a {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .link-text a:hover {
+        text-decoration: underline;
+      }
+      
+      .error-message {
+          display: none;
+          color: var(--danger);
+          background-color: #fcebeb;
+          border: 1px solid var(--danger);
+          padding: 10px;
+          border-radius: var(--radius-sm);
+          margin-bottom: 20px;
+          text-align: center;
+          font-size: 14px;
+      }
+
+      /* --- MEDIA QUERIES --- */
+      /* Adjust breakpoint for two-column layout */
+      @media (max-width: 900px) { 
+        .form-grid {
+            grid-template-columns: 1fr; /* Single column on tablet/mobile */
+            gap: 20px;
+        }
+        .form-grid::after {
+            display: none; /* Hide vertical divider on mobile */
+        }
+        .card {
+            max-width: 100%;
+            padding: 30px 20px;
+        }
+        .section-title-col {
+            margin-top: 0;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .header {
+          flex-direction: column;
+          gap: 15px;
+          padding: 15px 20px;
+        }
+        .nav-links {
+            width: 100%;
+            justify-content: space-around;
+        }
+        .logo a {
+            font-size: 20px;
+        }
+        .logo-icon {
+            font-size: 24px;
+        }
+        .card h2 {
+            font-size: 24px;
+        }
+        .btn, .nav-links a {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .role-selection {
+            grid-template-columns: 1fr; /* Stack roles on small screens */
+        }
+        .input-row {
+            flex-direction: column;
+            gap: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER NAVIGATION -->
+    <header class="header">
+      <div class="logo">
+        <!-- Unique 3D-effect logo -->
+        <a href="#" id="logo-home">
+            <i class="fas fa-users-gear logo-icon"></i>
+            EduStaff Hub
+        </a>
+      </div>
+      <nav class="nav-links">
+        <a href="/adminview/dashboard.html" class="nav-link" id="nav-home">Home</a>
+        <a href="login.html" class="btn btn-outline" id="btn-login">Login</a>
+        <a href="register.html" class="btn btn-primary" id="btn-signup">Sign Up</a>
+      </nav>
+    </header>
+
+    <!-- SIGN UP FORM CONTAINER -->
+    <main class="form-container">
+      <div class="card">
+        <h2>Staff Account Registration</h2>
+        <p>Welcome to EduStaff Hub. Please provide your details to create an account.</p>
+
+        <!-- Message Box for errors/success (not using alert()) -->
+        <div id="message-box" class="error-message"></div>
+
+        <form id="signup-form">
+          
+          <div class="form-grid">
+              
+              <!-- ============================================== -->
+              <!-- LEFT COLUMN: PERSONAL INFORMATION -->
+              <!-- ============================================== -->
+              <div class="section-column personal-info">
+                  <div class="section-title-col">Personal Details</div>
+                  
+                  <!-- Name -->
+                  <div class="form-group">
+                    <label for="name">FULL NAME</label>
+                    <input type="text" id="name" placeholder="John Doe" required />
+                  </div>
+                  
+                  <!-- Email Address -->
+                  <div class="form-group">
+                    <label for="email">EMAIL ADDRESS</label>
+                    <input type="email" id="email" placeholder="test@school.edu" required />
+                  </div>
+
+                  <div class="input-row">
+                    <!-- Date of Birth -->
+                    <div class="form-group">
+                        <label for="dob">DATE OF BIRTH</label>
+                        <input type="date" id="dob" required />
+                    </div>
+                  </div>
+
+
+                  <!-- Position/Role Selection (Radio Boxes) -->
+                  <div class="form-group role-group">
+                    <label>POSITION/ROLE</label>
+                    <div class="role-selection four-options">
+                        <div class="radio-option custom-radio">
+                            <input type="radio" id="role-registrar" name="role" value="registrar">
+                            <label for="role-registrar">REGISTRAR</label>
+                        </div>
+                        <div class="radio-option custom-radio">
+                            <input type="radio" id="role-admin" name="role" value="admin">
+                            <label for="role-admin">ADMIN</label>
+                        </div>
+                        <div class="radio-option custom-radio">
+                            <input type="radio" id="role-depthead" name="role" value="department-head">
+                            <label for="role-depthead">DEPT. HEAD</label>
+                        </div>
+                        <div class="radio-option custom-radio">
+                            <input type="radio" id="role-instructor" name="role" value="instructor" checked>
+                            <label for="role-instructor">INSTRUCTOR</label>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+
+              <!-- ============================================== -->
+              <!-- RIGHT COLUMN: ACCOUNT CREDENTIALS -->
+              <!-- ============================================== -->
+              <div class="section-column account-credentials">
+                  <div class="section-title-col">Account Security</div>
+                  
+                  <!-- Username (used for public display/ID) -->
+                  <div class="form-group">
+                    <label for="username">USERNAME</label>
+                    <input type="text" id="username" placeholder="johndoe" required />
+                  </div>
+
+                  <!-- Password -->
+                  <div class="form-group">
+                    <label for="password">PASSWORD</label>
+                    <input type="password" id="password" placeholder="••••••••" required minlength="6"/>
+                  </div>
+                  
+                  <!-- Confirm Password -->
+                  <div class="form-group">
+                    <label for="confirm-password">CONFIRM PASSWORD</label>
+                    <input type="password" id="confirm-password" placeholder="••••••••" required minlength="6"/>
+                  </div>
+                  
+                  <!-- Placeholder to balance column height if needed -->
+                  <div class="form-group">
+                      <p style="font-size:12px; color:var(--text-light);">
+                          Your password must be at least 6 characters long and include a mix of letters and numbers.
+                      </p>
+                  </div>
+                  
+              </div>
+              
+              <!-- ============================================== -->
+              <!-- FULL SPAN ELEMENTS (Below the two columns) -->
+              <!-- ============================================== -->
+              
+              <!-- Terms and Conditions (Checkbox) -->
+              <div class="checkbox-group form-span-full">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+              </div>
+
+              <div class="form-actions form-span-full">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-user-plus"></i> Register Account
+                </button>
+              </div>
+          </div>
+        </form>
+        
+        <div class="link-text">
+            Already Registered? <a href="login.html" id="link-login-header">Login Here</a>
+        </div>
+      </div>
+    </main>
+
+    <!-- FIREBASE AND SCRIPT IMPORTS -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { 
+        getAuth, 
+        createUserWithEmailAndPassword,
+        signInAnonymously,
+        signInWithCustomToken 
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+      import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // IMPORTANT: Global variables provided by the canvas environment
+      const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+      const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+      const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+      // Initialize Firebase App
+      let app;
+      let db;
+      let auth;
+
+      const messageBox = document.getElementById('message-box');
+
+      function showMessage(message, isError = false) {
+        messageBox.textContent = message;
+        messageBox.style.display = 'block';
+        messageBox.style.color = isError ? 'var(--danger)' : 'var(--primary)';
+        messageBox.style.borderColor = isError ? 'var(--danger)' : 'var(--primary)';
+        messageBox.style.backgroundColor = isError ? '#fcebeb' : '#e6f7ef';
+      }
+
+      function hideMessage() {
+        messageBox.style.display = 'none';
+      }
+      
+      // Function to handle navigation
+      const handleNavigation = (target) => {
+          if (target === "home") window.location.href = "index.html";
+          if (target === "login") window.location.href = "login.html";
+          if (target === "signup") window.location.href = "register.html";
+      };
+
+      // Exponential Backoff implementation
+      async function callApiWithBackoff(apiCall, maxRetries = 5, delay = 1000) {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                return await apiCall();
+            } catch (error) {
+                if (i === maxRetries - 1) throw error;
+                await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+            }
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Setup Firebase
+        if (Object.keys(firebaseConfig).length > 0) {
+          app = initializeApp(firebaseConfig);
+          db = getFirestore(app);
+          auth = getAuth(app);
+          setLogLevel('Debug');
+          
+          try {
+              // Sign in using custom token or anonymously
+              if (initialAuthToken) {
+                await callApiWithBackoff(() => signInWithCustomToken(auth, initialAuthToken));
+              } else {
+                await callApiWithBackoff(() => signInAnonymously(auth));
+              }
+              console.log("Firebase initialized and user authenticated.");
+          } catch (error) {
+              console.error("Firebase Auth initialization failed:", error);
+              showMessage("Failed to initialize authentication service. Please check your connection.", true);
+          }
+        } else {
+            console.error("Firebase configuration is missing.");
+            showMessage("Application configuration error: Firebase is not configured.", true);
+        }
+
+        // Attach event listeners for navigation (prevent default link behavior)
+        document.getElementById("logo-home").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("home"); });
+        document.getElementById("nav-home").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("home"); });
+        document.getElementById("btn-login").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("login"); });
+        document.getElementById("btn-signup").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("signup"); });
+        
+        // Also attach to the login link in the header/title area
+        document.getElementById("link-login-header").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("login"); });
+
+
+        // --- SIGN UP FORM HANDLER ---
+        const signupForm = document.getElementById('signup-form');
+        signupForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          hideMessage();
+
+          // PERSONAL INFORMATION
+          const name = document.getElementById('name').value.trim();
+          const email = document.getElementById('email').value.trim();
+          const dob = document.getElementById('dob').value;
+          const selectedRole = signupForm.querySelector('input[name="role"]:checked');
+          
+          // ACCOUNT CREDENTIALS
+          const username = document.getElementById('username').value.trim();
+          const password = document.getElementById('password').value;
+          const confirmPassword = document.getElementById('confirm-password').value;
+          
+          // TERMS
+          const termsAccepted = document.getElementById('terms').checked;
+          
+          const registerButton = signupForm.querySelector('button');
+
+          // --- VALIDATION ---
+          if (!name || !email || !dob || !username || !password || !confirmPassword) {
+            showMessage("Please fill in all fields.", true);
+            return;
+          }
+
+          if (password !== confirmPassword) {
+            showMessage("Passwords do not match.", true);
+            return;
+          }
+          
+          if (password.length < 6) {
+              showMessage("Password must be at least 6 characters long.", true);
+              return;
+          }
+          
+          if (!selectedRole) {
+              showMessage("Please select your Position/Role.", true);
+              return;
+          }
+          
+          if (!termsAccepted) {
+              showMessage("You must agree to the Terms of Service to register.", true);
+              return;
+          }
+          // --- END VALIDATION ---
+
+
+          registerButton.disabled = true;
+          registerButton.textContent = 'Registering...';
+
+          try {
+            // 1. Create User in Firebase Authentication
+            const userCredential = await callApiWithBackoff(() => createUserWithEmailAndPassword(auth, email, password));
+            const user = userCredential.user;
+            
+            // 2. Store user data in Firestore (private collection)
+            const userDocRef = doc(db, `/artifacts/${appId}/users/${user.uid}/user_data/profile`);
+            
+            await callApiWithBackoff(() => setDoc(userDocRef, {
+                uid: user.uid,
+                email: user.email,
+                fullName: name,
+                username: username,
+                dateOfBirth: dob,
+                registrationDate: new Date().toISOString(),
+                role: selectedRole.value 
+            }));
+
+            showMessage(`Registration successful! Welcome, ${name}. Redirecting to dashboard...`);
+            
+            // Wait a moment and then redirect to the (hypothetical) dashboard
+            setTimeout(() => {
+                window.location.href = "dashboard.html"; 
+            }, 2000);
+
+          } catch (error) {
+            console.error("Registration Error:", error);
+            let errorMessage = "Registration failed. Please try again.";
+            
+            // Handle common Firebase errors
+            if (error.code) {
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = "This email address is already in use.";
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = "The email address is invalid.";
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = "The password is too weak. Please use a stronger password.";
+                        break;
+                    default:
+                        errorMessage = `Registration Error: ${error.message.substring(0, 100)}...`;
+                        break;
+                }
+            }
+            showMessage(errorMessage, true);
+
+          } finally {
+            registerButton.disabled = false;
+            registerButton.innerHTML = '<i class="fas fa-user-plus"></i> Register Account';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

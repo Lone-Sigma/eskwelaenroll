@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enrollment System Portal</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- GLOBAL STYLES & VARIABLES (Light Mode with Green/Teal Palette) --- */
+      :root {
+        /* Base Colors - Adjusted for Light Mode */
+        --primary: #007769; /* Dark Teal Green */
+        --primary-light: #00b4a5; /* Bright Teal */
+        --secondary: #38a3a5; /* Mid Teal */
+        --danger: #ef476f;
+        --dark: #2d3748; /* Dark text/headers */
+        --light: #ffffff; /* Card/Surface white */
+        --border: #e9ecef;
+        --text: var(--dark); /* Main text color (Dark) */
+        --text-light: #718096; /* Light gray text/labels */
+        --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --radius: 10px;
+        --radius-sm: 6px;
+        --transition: all 0.3s ease;
+
+        /* Background Colors (Light Theme) */
+        --hero-bg-gradient-start: #f5f7fa; /* Very Light Gray */
+        --hero-bg-gradient-end: #ffffff; /* White */
+        --accent-color: #57cc99; /* Light Mint/Accent Green */
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        /* Light mode background gradient */
+        background: linear-gradient(
+          135deg,
+          var(--hero-bg-gradient-start) 0%,
+          var(--hero-bg-gradient-end) 100%
+        );
+        color: var(--text); /* Dark text on light background */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* --- HEADER STYLES (White background for light theme) --- */
+      .header {
+        /* White background for light theme header */
+        background-color: var(--light);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Softer shadow */
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+      }
+
+      .logo a {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--dark); /* Dark logo text */
+        text-decoration: none;
+        letter-spacing: -0.5px;
+      }
+
+      .logo-icon {
+        font-size: 32px;
+        margin-right: 10px;
+        color: var(--accent-color);
+        /* Multi-layer text shadow for depth effect */
+        text-shadow: 
+            1px 1px 0 var(--secondary),
+            2px 2px 0 var(--primary-light),
+            3px 3px 5px rgba(0, 0, 0, 0.3); 
+        transition: transform 0.3s ease;
+      }
+
+      .logo a:hover .logo-icon {
+          transform: scale(1.05);
+      }
+      
+      .logo a:hover {
+          color: var(--primary);
+      }
+
+      /* Navigation now groups the "Home" link with auth buttons */
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      
+      .nav-links a.nav-link { /* Styling for Home link */
+        color: var(--text-light); /* Darker gray text */
+        text-decoration: none;
+        font-weight: 500;
+        transition: color var(--transition);
+        padding: 5px 0;
+        position: relative;
+        font-size: 14px;
+      }
+      
+      .nav-links a.nav-link:hover {
+          color: var(--dark); /* Hover to dark text */
+      }
+      
+      .nav-links a.nav-link:after {
+          content: "";
+          position: absolute;
+          width: 0;
+          height: 2px;
+          display: block;
+          margin-top: 5px;
+          background: var(--accent-color);
+          transition: width var(--transition);
+          left: 50%;
+          transform: translateX(-50%);
+      }
+
+      .nav-links a.nav-link:hover:after {
+          width: 100%;
+      }
+
+      .auth-buttons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .btn {
+        padding: 8px 18px;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        border: 1px solid transparent;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+
+      .btn-outline {
+        color: var(--dark); /* Dark text for outline button */
+        border-color: var(--border);
+        background-color: transparent;
+      }
+
+      .btn-outline:hover {
+        background-color: var(--border);
+        border-color: var(--text-light);
+      }
+
+      .btn-primary {
+        /* Accent color gradient remains */
+        background: linear-gradient(
+          90deg,
+          var(--accent-color) 0%,
+          var(--primary-light) 100%
+        );
+        color: var(--dark); /* Dark text on bright button */
+        border: none;
+        box-shadow: 0 4px 15px rgba(87, 204, 153, 0.4);
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(
+          90deg,
+          var(--primary-light) 0%,
+          var(--accent-color) 100%
+        );
+        box-shadow: 0 6px 20px rgba(87, 204, 153, 0.6);
+        transform: translateY(-2px);
+      }
+
+      /* Desktop Navigation */
+      @media (max-width: 768px) {
+        /* On smaller screens, allow logo to take space, but keep links together */
+        .header {
+            padding: 15px 20px;
+        }
+        .nav-links {
+            gap: 10px;
+        }
+        .logo a {
+            font-size: 20px;
+        }
+      }
+
+      /* --- HERO SECTION STYLES (Now optimized for light background) --- */
+      .hero-section {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 50px 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-section .welcome-text {
+        font-size: 14px;
+        color: var(--primary); /* Use a darker accent color for visibility */
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+
+      .hero-section h1 {
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 25px;
+        max-width: 900px;
+        color: var(--dark); /* Dark text for headline */
+        text-shadow: none; /* No shadow needed on light background */
+      }
+      
+      .hero-section h1 span {
+          /* Gradient text highlight remains */
+          background: linear-gradient(45deg, var(--primary-light), var(--accent-color));
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+      }
+
+      .hero-section p {
+        font-size: 18px;
+        font-weight: 400; /* Slightly heavier font for better readability on light mode */
+        max-width: 700px;
+        margin-bottom: 40px;
+        line-height: 1.6;
+        color: var(--text-light); /* Light gray body text */
+      }
+
+      .hero-button {
+        padding: 15px 30px;
+        font-size: 18px;
+        border-radius: var(--radius);
+        background: linear-gradient(
+          90deg,
+          var(--accent-color) 0%,
+          var(--primary-light) 100%
+        );
+        color: var(--dark);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        box-shadow: 0 8px 25px rgba(87, 204, 153, 0.5);
+      }
+
+      .hero-button:hover {
+        background: linear-gradient(
+          90deg,
+          var(--primary-light) 0%,
+          var(--accent-color) 100%
+        );
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(87, 204, 153, 0.7);
+      }
+
+      /* --- BACKGROUND ELEMENTS (keeping them subtle) --- */
+      .background-element {
+        position: absolute;
+        opacity: 0.1; /* Reduced opacity for light mode */
+        filter: blur(10px); /* Slightly increased blur */
+        animation: floatEffect 15s ease-in-out infinite alternate;
+      }
+
+      .element-1 {
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+        border-radius: 50%;
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+      }
+
+      .element-2 {
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+        border-radius: 50%;
+        bottom: 15%;
+        right: 8%;
+        animation-delay: 5s;
+      }
+
+      .element-3 {
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+        border-radius: 50%;
+        top: 50%;
+        left: 20%;
+        animation-delay: 10s;
+      }
+      
+      @keyframes floatEffect {
+          0% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(20px, 30px) scale(1.05); }
+          100% { transform: translate(0, 0) scale(1); }
+      }
+
+      /* --- MEDIA QUERIES --- */
+      @media (max-width: 900px) {
+        .hero-section h1 {
+          font-size: 48px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero-section h1 {
+          font-size: 36px;
+        }
+        .hero-section p {
+          font-size: 16px;
+        }
+        .hero-button {
+          padding: 12px 25px;
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .header {
+          flex-direction: column;
+          gap: 15px;
+          padding: 15px 20px;
+        }
+        .nav-links {
+            width: 100%;
+            justify-content: space-around;
+        }
+        .logo a {
+            font-size: 20px;
+        }
+        .logo-icon {
+            font-size: 24px;
+        }
+        .card h2 {
+            font-size: 24px;
+        }
+        .btn, .nav-links a {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .role-selection {
+            grid-template-columns: 1fr; /* Stack roles on small screens */
+        }
+        .input-row {
+            flex-direction: column;
+            gap: 0;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header {
+          flex-direction: column;
+          gap: 15px;
+        }
+        .nav-links {
+            /* Keep home/auth buttons together */
+            width: 100%;
+            justify-content: space-around;
+        }
+        .auth-buttons {
+            gap: 5px;
+        }
+        .btn, .nav-links a {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .hero-section h1 {
+          font-size: 30px;
+        }
+        .hero-section p {
+          font-size: 14px;
+        }
+        .background-element {
+            display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER NAVIGATION -->
+    <header class="header">
+      <div class="logo">
+        <!-- Unique 3D-effect logo -->
+        <a href="#" id="logo-home">
+            <i class="fas fa-users-gear logo-icon"></i>
+            EduStaff Hub
+        </a>
+      </div>
+      <!-- NAVIGATION LINKS -->
+      <nav class="nav-links" id="main-nav">
+        <a href="index.html" class="nav-link" id="nav-home">Home</a>
+        <a href="login.html" class="btn btn-outline" id="btn-login">Login</a>
+        <a href="register.html" class="btn btn-primary" id="btn-signup">Sign Up</a>
+      </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <main class="hero-section">
+      <div class="welcome-text">Welcome to the future of education</div>
+      <h1>
+        Streamline Your Day with the <br />
+        <span>Teacher Enrollment Portal</span>
+      </h1>
+      <p>
+        The Enrollment System Portal empowers educators and administrators with
+        intuitive tools to manage courses, student records, grades, and schedules.
+        Focus on teaching, and let us handle the administrative load.
+      </p>
+      <a href="login.html" class="hero-button" id="hero-login-button"
+        >Login Now</a
+      >
+    </main>
+
+    <!-- Background elements for visual flair -->
+    <div class="background-element element-1"></div>
+    <div class="background-element element-2"></div>
+    <div class="background-element element-3"></div>
+
+    <!-- JAVASCRIPT FOR NAVIGATION -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Function to handle header navigation links
+        const handleNavigation = (target) => {
+          console.log(`Navigating to: ${target}`);
+          
+          switch (target) {
+            case "home":
+              window.location.href = "/adminview/dashboard.html";
+              break;
+            case "login":
+              window.location.href = "login.html";
+              break;
+            case "signup":
+              window.location.href = "register.html";
+              break;
+            default:
+              console.log("Invalid navigation target.");
+          }
+        };
+
+        // Attach event listeners to the header navigation links
+        document
+          .getElementById("logo-home")
+          .addEventListener("click", (e) => { e.preventDefault(); handleNavigation("home"); });
+        document
+          .getElementById("nav-home")
+          .addEventListener("click", (e) => { e.preventDefault(); handleNavigation("home"); });
+        document
+          .getElementById("btn-login")
+          .addEventListener("click", (e) => { e.preventDefault(); handleNavigation("login"); });
+        document
+          .getElementById("btn-signup")
+          .addEventListener("click", (e) => { e.preventDefault(); handleNavigation("signup"); });
+        document
+          .getElementById("hero-login-button")
+          .addEventListener("click", (e) => { e.preventDefault(); handleNavigation("login"); });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elementary Enrollment - Teachers Roster</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- START OF CUSTOM CSS (UNCHANGED STYLES) --- */
+      :root {
+        --primary: #2d9c9b;
+        --primary-light: #30b0af;
+        --secondary: #217a7a;
+        --sidebar-dark: #0d3b30;
+        --sidebar-gradient: #114e41;
+        --success: #17c3b2;
+        --danger: #f72585;
+        --warning: #ffbe0b;
+        --info: #4895ef;
+        --dark: #2d3748;
+        --light: #f8f9fa;
+        --border: #e9ecef;
+        --text: #2d3748;
+        --text-light: #718096;
+        --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --radius: 10px;
+        --radius-sm: 6px;
+        --sidebar-width: 260px;
+        --header-height: 70px;
+        --transition: all 0.3s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background-color: #f5f7fb;
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary-light);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+      }
+
+      /* Layout */
+      .container {
+        display: grid;
+        grid-template-columns: var(--sidebar-width) 1fr;
+        grid-template-rows: var(--header-height) 1fr;
+        min-height: 100vh;
+      }
+
+      /* Sidebar - DARK GREEN PALETTE */
+      .sidebar {
+        grid-row: 1 / 3;
+        background: linear-gradient(
+          180deg,
+          var(--sidebar-dark) 0%,
+          var(--sidebar-gradient) 100%
+        );
+        color: white;
+        overflow-y: auto;
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        position: relative;
+      }
+
+      .sidebar::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 1px;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+      }
+
+      .logo {
+        padding: 24px 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 10px;
+      }
+
+      .logo h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        letter-spacing: 0.5px;
+      }
+
+      .logo span {
+        color: var(--primary-light);
+        background: linear-gradient(45deg, var(--primary-light), var(--success));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-left: 4px;
+      }
+
+      .nav-menu {
+        padding: 10px 0;
+      }
+
+      .menu-heading {
+        padding: 16px 25px 8px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 500;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+
+      .nav-item {
+        padding: 12px 25px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: var(--transition);
+        border-left: 4px solid transparent;
+        margin: 4px 0;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-item::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: var(--transition);
+      }
+
+      .nav-item:hover::after {
+        width: 100%;
+      }
+
+      .nav-item:hover,
+      .nav-item.active {
+        background-color: rgba(255, 255, 255, 0.07);
+        border-left-color: var(--primary-light);
+      }
+
+      .nav-item.active {
+        background: linear-gradient(
+          90deg,
+          rgba(45, 156, 155, 0.2),
+          transparent
+        );
+        font-weight: 500;
+      }
+
+      .nav-item i {
+        width: 24px;
+        margin-right: 12px;
+        font-size: 18px;
+        text-align: center;
+        transition: var(--transition);
+      }
+
+      .nav-item:hover i {
+        transform: translateY(-2px);
+      }
+
+      /* Header */
+      .header {
+        grid-column: 2;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 30px;
+        box-shadow: var(--shadow-sm);
+        z-index: 100;
+        position: sticky;
+        top: 0;
+      }
+
+      .search-bar {
+        display: flex;
+        align-items: center;
+        background-color: var(--light);
+        border-radius: 50px;
+        padding: 8px 18px;
+        flex: 0 0 420px;
+        transition: var(--transition);
+        border: 1px solid transparent;
+      }
+
+      .search-bar:focus-within {
+        box-shadow: 0 0 0 2px rgba(45, 156, 155, 0.1);
+        border-color: rgba(45, 156, 155, 0.3);
+      }
+
+      .search-bar input {
+        border: none;
+        background: transparent;
+        outline: none;
+        width: 100%;
+        padding: 6px 10px;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      .search-bar i {
+        color: var(--text-light);
+        font-size: 16px;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        position: relative;
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: var(--radius);
+        transition: var(--transition);
+        margin-left: 10px;
+        user-select: none;
+      }
+
+      .user-profile:hover {
+        background-color: rgba(45, 156, 155, 0.05);
+      }
+
+      .profile-img {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        margin-right: 12px;
+        box-shadow: 0 3px 8px rgba(45, 156, 155, 0.2);
+        font-size: 16px;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .user-name {
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .user-role {
+        font-size: 12px;
+        color: var(--text-light);
+      }
+
+      /* Profile Dropdown Styling */
+      .profile-dropdown {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 180px;
+        background-color: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: var(--transition);
+        z-index: 50;
+      }
+
+      .profile-dropdown.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .dropdown-item {
+        padding: 12px 18px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: var(--text);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .dropdown-item:first-child {
+        border-top-left-radius: var(--radius);
+        border-top-right-radius: var(--radius);
+      }
+
+      .dropdown-item:last-child {
+        border-bottom-left-radius: var(--radius);
+        border-bottom-right-radius: var(--radius);
+        color: var(--danger);
+        font-weight: 600;
+      }
+
+      .dropdown-item:hover {
+        background-color: rgba(45, 156, 155, 0.1);
+      }
+
+      .dropdown-item i {
+        margin-right: 10px;
+        font-size: 16px;
+      }
+
+      /* Main Content */
+      .main-content {
+        grid-column: 2;
+        padding: 25px 30px;
+        overflow-y: auto;
+      }
+
+      .page-title {
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--dark);
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        border-radius: 10px;
+      }
+
+      .action-buttons .btn {
+        margin-left: 12px;
+      }
+
+      /* Data Table */
+      .table-card {
+        background-color: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-sm);
+        overflow-x: auto;
+        margin-bottom: 25px;
+        animation: fadeInUp 0.7s ease;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+      }
+
+      .card-title {
+        padding: 24px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: rgba(248, 249, 250, 0.5);
+      }
+
+      .card-title h3 {
+        font-size: 19px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+      }
+
+      .card-title h3 i {
+        margin-right: 10px;
+        color: var(--primary);
+      }
+
+      .data-table {
+        width: 100%;
+        min-width: 900px;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 16px 24px;
+        text-align: left;
+      }
+
+      .data-table th {
+        font-weight: 600;
+        color: var(--text);
+        background-color: #f8f9fa;
+        position: sticky;
+        top: 0;
+        box-shadow: 0 1px 0 0 var(--border);
+      }
+
+      .data-table th:first-child {
+        border-top-left-radius: 8px;
+      }
+
+      .data-table th:last-child {
+        border-top-right-radius: 8px;
+      }
+
+      .data-table td {
+        border-bottom: 1px solid var(--border);
+        font-size: 14px;
+      }
+
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .data-table tbody tr {
+        transition: var(--transition);
+      }
+
+      .data-table tbody tr:hover {
+        background-color: rgba(45, 156, 155, 0.03);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+      }
+
+      .status {
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
+      }
+
+      .status i {
+        margin-right: 6px;
+        font-size: 12px;
+      }
+      
+      /* Status for Teacher View */
+      .status.fulltime {
+        background-color: rgba(23, 195, 178, 0.15); /* Success */
+        color: #10b981;
+        border: 1px solid rgba(23, 195, 178, 0.3);
+      }
+      .status.parttime {
+        background-color: rgba(72, 149, 239, 0.15); /* Info */
+        color: #3b82f6;
+        border: 1px solid rgba(72, 149, 239, 0.3);
+      }
+      .status.admin {
+        background-color: rgba(255, 193, 7, 0.15); /* Warning */
+        color: #e69100;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+      }
+
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        border-radius: var(--radius);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        outline: none;
+        font-size: 14px;
+        letter-spacing: 0.3px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: -100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      .btn:hover::after {
+        left: 100%;
+      }
+
+      .btn i {
+        margin-right: 8px;
+        font-size: 16px;
+        transition: var(--transition);
+      }
+
+      .btn:hover i {
+        transform: translateX(2px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(45, 156, 155, 0.2);
+      }
+
+      .btn-outline {
+        border: 2px solid var(--primary-light);
+        color: var(--primary);
+        background-color: transparent;
+        box-shadow: none;
+      }
+
+      .btn-outline:hover {
+        background-color: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(45, 156, 155, 0.2);
+      }
+
+      .btn-sm {
+        padding: 7px 14px;
+        font-size: 13px;
+        border-radius: var(--radius-sm);
+      }
+
+      /* Action Icons */
+      .action-icons {
+        display: flex;
+        gap: 6px;
+      }
+
+      .btn-icon {
+        padding: 8px 10px;
+        color: var(--text-light);
+        border: 1px solid var(--border);
+        background-color: var(--light);
+        box-shadow: none;
+        width: 38px;
+        height: 38px;
+        border-radius: var(--radius-sm);
+      }
+
+      .btn-icon:hover {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn-icon.view:hover {
+        background-color: var(--info);
+        color: white;
+      }
+      .btn-icon.edit:hover {
+        background-color: var(--primary);
+        color: white;
+      }
+      .btn-icon.delete:hover {
+        background-color: var(--danger);
+        color: white;
+      }
+
+      /* Animations and Media Queries (as before) */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 992px) {
+        .container {
+          grid-template-columns: 0 1fr;
+        }
+
+        .sidebar {
+          transform: translateX(-100%);
+          position: fixed;
+          height: 100vh;
+          z-index: 1001;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+          box-shadow: var(--shadow-lg);
+        }
+
+        .header {
+          padding: 0 20px;
+        }
+
+        .main-content {
+          padding: 20px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .search-bar {
+          display: none;
+        }
+
+        .user-role {
+          display: none;
+        }
+
+        .data-table th,
+        .data-table td {
+          padding: 15px;
+        }
+
+        .title {
+          font-size: 24px;
+        }
+        .data-table {
+          min-width: 700px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .header-actions {
+          margin-left: auto;
+        }
+
+        .user-info {
+          display: none;
+        }
+
+        .profile-img {
+          margin-right: 0;
+        }
+
+        .action-buttons {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .action-buttons .btn {
+          margin: 5px 0;
+        }
+      }
+      .fas {
+        font-size: 18px;
+      }
+      /* --- END OF CUSTOM CSS --- */
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <div class="logo">
+          <h1>Edu<span>Dashboard</span></h1>
+        </div>
+        <div class="nav-menu">
+          <div class="menu-heading">Main Navigation</div>
+          <a href="dashboard.html" class="nav-link">
+            <div class="nav-item">
+              <i class="fas fa-chart-pie"></i>
+              <span>Dashboard</span>
+            </div>
+          </a>
+          <a href="students.html" class="nav-link">
+            <div class="nav-item">
+              <i class="fas fa-graduation-cap"></i>
+              <span>Students</span>
+            </div>
+          </a>
+          <a href="pending.html" class="nav-link">
+            <div class="nav-item">
+              <i class="fas fa-clipboard-list"></i>
+              <span>Pending Enrollments</span>
+            </div>
+          </a>
+          <a href="teachers.html" class="nav-link">
+            <div class="nav-item active">
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span>Teachers</span>
+            </div>
+          </a>
+          <div class="nav-item">
+            <i class="fas fa-school"></i>
+            <span>Homerooms/Grades</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            placeholder="Search teacher names or faculty..."
+          />
+        </div>
+        <div class="header-actions">
+          <div class="user-profile" id="userProfileButton">
+            <div class="profile-img">JD</div>
+            <div class="user-info">
+              <div class="user-name">John Doe</div>
+              <div class="user-role">Administrator</div>
+            </div>
+          </div>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-item">
+              <i class="fas fa-user-circle"></i>
+              <span>Profile</span>
+            </div>
+            <div class="dropdown-item">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </div>
+            <div class="dropdown-item" onclick="alert('Logging out...')">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <div class="page-title">
+          <div class="title">School Faculty Roster</div>
+          <div class="action-buttons">
+            <button class="btn btn-outline">
+              <i class="fas fa-download"></i>
+              Export Staff Data
+            </button>
+            <button class="btn btn-primary">
+              <i class="fas fa-user-plus"></i>
+              Add New Teacher
+            </button>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="card-title">
+            <h3><i class="fas fa-users"></i> Active Teaching Staff</h3>
+            <div class="action-buttons">
+              <button class="btn btn-sm btn-outline">
+                <i class="fas fa-filter"></i> Filter by Faculty
+              </button>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Teacher Name</th>
+                <th>Position</th>
+                <th>Grade Level/Homeroom</th>
+                <th>Faculty/Department</th>
+                <th>Employment Type</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>**Ms. Jane Doe**</td>
+                <td>Homeroom Teacher</td>
+                <td>Kindergarten (Class A)</td>
+                <td>Early Childhood</td>
+                <td>
+                  <span class="status fulltime"
+                    ><i class="fas fa-briefcase"></i> Full-Time</span
+                  >
+                </td>
+                <td>
+                  <div class="action-icons">
+                    <button
+                      class="btn btn-icon view"
+                      title="View Teacher Profile"
+                      onclick="alert('Redirect to Jane Doe Profile')"
+                    >
+                      <i class="fas fa-address-card"></i>
+                    </button>
+                    <button class="btn btn-icon edit" title="Edit Staff Details">
+                      <i class="fas fa-user-edit"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>**Mr. Robert Smith**</td>
+                <td>Homeroom Teacher</td>
+                <td>Grade 4 (Class B)</td>
+                <td>Primary Education</td>
+                <td>
+                  <span class="status fulltime"
+                    ><i class="fas fa-briefcase"></i> Full-Time</span
+                  >
+                </td>
+                <td>
+                  <div class="action-icons">
+                    <button
+                      class="btn btn-icon view"
+                      title="View Teacher Profile"
+                      onclick="alert('Redirect to Robert Smith Profile')"
+                    >
+                      <i class="fas fa-address-card"></i>
+                    </button>
+                    <button class="btn btn-icon edit" title="Edit Staff Details">
+                      <i class="fas fa-user-edit"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>**Mrs. Chen Li**</td>
+                <td>Specialist Teacher</td>
+                <td>Grades 1-5</td>
+                <td>Arts & Culture</td>
+                <td>
+                  <span class="status parttime"
+                    ><i class="fas fa-clock"></i> Part-Time</span
+                  >
+                </td>
+                <td>
+                  <div class="action-icons">
+                    <button
+                      class="btn btn-icon view"
+                      title="View Teacher Profile"
+                      onclick="alert('Redirect to Chen Li Profile')"
+                    >
+                      <i class="fas fa-address-card"></i>
+                    </button>
+                    <button class="btn btn-icon edit" title="Edit Staff Details">
+                      <i class="fas fa-user-edit"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>**Dr. Alice Johnson**</td>
+                <td>Head of Faculty</td>
+                <td>Administration</td>
+                <td>Primary Education</td>
+                <td>
+                  <span class="status admin"
+                    ><i class="fas fa-user-cog"></i> Administrator</span
+                  >
+                </td>
+                <td>
+                  <div class="action-icons">
+                    <button
+                      class="btn btn-icon view"
+                      title="View Teacher Profile"
+                      onclick="alert('Redirect to Alice Johnson Profile')"
+                    >
+                      <i class="fas fa-address-card"></i>
+                    </button>
+                    <button class="btn btn-icon edit" title="Edit Staff Details">
+                      <i class="fas fa-user-edit"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("userProfileButton")
+        .addEventListener("click", function () {
+          var dropdown = document.getElementById("profileDropdown");
+          dropdown.classList.toggle("show");
+        });
+
+      window.onclick = function (event) {
+        if (
+          !event.target.closest("#userProfileButton") &&
+          !event.target.closest("#profileDropdown")
+        ) {
+          var dropdown = document.getElementById("profileDropdown");
+          if (dropdown.classList.contains("show")) {
+            dropdown.classList.remove("show");
+          }
+        }
+      };
+    </script>
+  </body>
+</html>
