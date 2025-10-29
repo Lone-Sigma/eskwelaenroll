@@ -449,6 +449,72 @@
           var(--primary) 100%
         );
       }
+      
+      .form-status {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.9);
+          display: none;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          z-index: 10000;
+          font-size: 20px;
+          color: var(--primary);
+          text-align: center;
+      }
+      
+      .form-status.active {
+          display: flex;
+      }
+      
+      .loader {
+          border: 6px solid var(--border);
+          border-top: 6px solid var(--primary-light);
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+          animation: spin 1s linear infinite;
+          margin-bottom: 15px;
+      }
+      
+      .message-box {
+          background-color: var(--light);
+          padding: 25px;
+          border-radius: var(--radius);
+          box-shadow: var(--shadow-lg);
+          max-width: 400px;
+          width: 90%;
+          text-align: center;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 10001;
+          display: none; /* Controlled by JS */
+          border-top: 5px solid var(--danger);
+      }
+      .message-box.show {
+          display: block;
+      }
+      .message-box h3 {
+          color: var(--danger);
+          margin-bottom: 10px;
+      }
+      .message-box p {
+          color: var(--dark);
+          margin-bottom: 20px;
+          font-size: 15px;
+      }
+
+
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
 
 
       /* --- MEDIA QUERIES --- */
@@ -506,6 +572,19 @@
     </style>
   </head>
   <body>
+    <!-- Message Box for Errors -->
+    <div id="error-message-box" class="message-box">
+        <h3>Submission Error</h3>
+        <p id="error-message-text"></p>
+        <button class="btn btn-outline" onclick="closeMessageBox()">Close</button>
+    </div>
+
+    <!-- Loading/Status Overlay -->
+    <div id="loading-overlay" class="form-status">
+        <div class="loader"></div>
+        <p id="loading-text">Submitting your enrollment... Please wait.</p>
+    </div>
+
     <header class="header">
       <div class="logo">
         <a href="#" id="logo-home">
@@ -514,15 +593,15 @@
         </a>
       </div>
       <nav class="nav-links" id="main-nav">
-        <a href="/userview/home.html" class="nav-link" id="nav-home">Home</a>
-        <a href="/userview/studentform.html" class="nav-link active" class="btn btn-primary" id="btn-enroll">Enrollment</a>
+        <a href="#" class="nav-link" id="nav-home">Home</a>
+        <a href="#" class="nav-link active" id="btn-enroll">Enrollment</a>
       </nav>
     </header>
 
     <main class="form-container">
       <div class="card">
         <h2>Student Registration</h2>
-        <p>Please complete all sections to successfully enroll the student.</p>
+        <p>Please complete all sections to successfully enroll the student. All uploaded documents will be stored as Base64 data within a 1MB limit.</p>
 
         <form id="enrollment-form">
           <div class="form-grid">
@@ -556,11 +635,11 @@
                   <label>GENDER</label>
                   <div class="radio-selection">
                     <div class="custom-radio">
-                        <input type="radio" id="gender-male" name="gender" value="male" required>
+                        <input type="radio" id="gender-male" name="gender" value="Male" required>
                         <label for="gender-male">MALE</label>
                     </div>
                     <div class="custom-radio">
-                        <input type="radio" id="gender-female" name="gender" value="female">
+                        <input type="radio" id="gender-female" name="gender" value="Female">
                         <label for="gender-female">FEMALE</label>
                     </div>
                   </div>
@@ -605,21 +684,18 @@
               <div class="section-title-col" style="margin-top: 30px;">EDUCATIONAL INFORMATION</div>
               
               <div class="form-group">
-                <label>KINDERGARTEN</label>
+                <label>INTENDED GRADE LEVEL</label>
                 <div class="grade-selection-grid">
                     <div class="custom-radio"><input type="radio" id="k1" name="grade" value="K-1" required><label for="k1">K1</label></div>
                     <div class="custom-radio"><input type="radio" id="k2" name="grade" value="K-2"><label for="k2">K2</label></div>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label>ELEMENTARY</label>
-                <div class="grade-selection-grid elementary">
                     <div class="custom-radio"><input type="radio" id="e1" name="grade" value="E-1"><label for="e1">1</label></div>
                     <div class="custom-radio"><input type="radio" id="e2" name="grade" value="E-2"><label for="e2">2</label></div>
                     <div class="custom-radio"><input type="radio" id="e3" name="grade" value="E-3"><label for="e3">3</label></div>
                     <div class="custom-radio"><input type="radio" id="e4" name="grade" value="E-4"><label for="e4">4</label></div>
+                </div>
+                <div class="grade-selection-grid elementary" style="margin-top: 10px;">
                     <div class="custom-radio"><input type="radio" id="e5" name="grade" value="E-5"><label for="e5">5</label></div>
+                    <div class="custom-radio"><input type="radio" id="e6" name="grade" value="E-6"><label for="e6">6</label></div>
                 </div>
               </div>
               
@@ -633,10 +709,11 @@
                     <div class="file-upload-box">
                         <label for="doc-birthcert">BIRTH CERTIFICATE</label>
                         <div class="upload-area">
-                            <input type="file" id="doc-birthcert" accept=".svg, .jpg, .jpeg, .png" required>
+                            <!-- Data attribute to store the Base64 status/result -->
+                            <input type="file" id="doc-birthcert" accept=".jpg, .jpeg, .png" data-doc-name="birthCert" required>
                             <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
                             <p class="upload-instruction">Click here to upload your file or drag.</p>
-                            <p>Supported Format: SVG, JPG, PNG (10MB each)</p>
+                            <p>Supported Format: JPG, PNG (Under 1MB total)</p>
                             <span class="uploaded-file-name" id="name-birthcert">No file selected.</span>
                         </div>
                     </div>
@@ -644,10 +721,10 @@
                     <div class="file-upload-box">
                         <label for="doc-reportcard">REPORT CARD / FORM 138</label>
                         <div class="upload-area">
-                            <input type="file" id="doc-reportcard" accept=".svg, .jpg, .jpeg, .png" required>
+                            <input type="file" id="doc-reportcard" accept=".jpg, .jpeg, .png" data-doc-name="reportCard" required>
                             <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
                             <p class="upload-instruction">Click here to upload your file or drag.</p>
-                            <p>Supported Format: SVG, JPG, PNG (10MB each)</p>
+                            <p>Supported Format: JPG, PNG (Under 1MB total)</p>
                             <span class="uploaded-file-name" id="name-reportcard">No file selected.</span>
                         </div>
                     </div>
@@ -655,10 +732,10 @@
                     <div class="file-upload-box">
                         <label for="doc-goodmoral">GOOD MORAL CERTIFICATE</label>
                         <div class="upload-area">
-                            <input type="file" id="doc-goodmoral" accept=".svg, .jpg, .jpeg, .png" required>
+                            <input type="file" id="doc-goodmoral" accept=".jpg, .jpeg, .png" data-doc-name="goodMoralCert" required>
                             <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
                             <p class="upload-instruction">Click here to upload your file or drag.</p>
-                            <p>Supported Format: SVG, JPG, PNG (10MB each)</p>
+                            <p>Supported Format: JPG, PNG (Under 1MB total)</p>
                             <span class="uploaded-file-name" id="name-goodmoral">No file selected.</span>
                         </div>
                     </div>
@@ -668,130 +745,148 @@
             </div>
 
             <div class="form-actions">
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-file-signature"></i> Enroll Student
+              <button type="submit" class="btn btn-primary" id="submit-btn">
+                <i class="fas fa-file-signature"></i> Submit Enrollment
               </button>
             </div>
           </div>
         </form>
         
         <div class="link-text">
-            * By enrolling, you confirm the accuracy of the information provided.
+            * By submitting this form, you agree to the privacy policy.
         </div>
       </div>
     </main>
 
-    <script>
-      // Function to handle file input visual updates
-      document.addEventListener('DOMContentLoaded', () => {
-          const fileInputs = [
-              { id: 'doc-birthcert', nameId: 'name-birthcert' },
-              { id: 'doc-reportcard', nameId: 'name-reportcard' },
-              { id: 'doc-goodmoral', nameId: 'name-goodmoral' }
-          ];
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-          fileInputs.forEach(item => {
-              const input = document.getElementById(item.id);
-              const nameDisplay = document.getElementById(item.nameId);
-              const uploadArea = input.closest('.upload-area');
-              
-              input.addEventListener('change', function() {
-                  if (this.files && this.files.length > 0) {
-                      nameDisplay.textContent = this.files[0].name;
-                  } else {
-                      nameDisplay.textContent = 'No file selected.';
-                  }
-              });
-              
-              // Handle drag-and-drop visual changes (optional, but good practice)
-              uploadArea.addEventListener('dragenter', (e) => {
-                  e.preventDefault();
-                  uploadArea.style.borderColor = 'var(--upload-icon)';
-                  uploadArea.style.backgroundColor = 'var(--accent-color)';
-              });
-              
-              uploadArea.addEventListener('dragleave', (e) => {
-                  e.preventDefault();
-                  uploadArea.style.borderColor = 'var(--upload-border)';
-                  uploadArea.style.backgroundColor = 'var(--upload-bg)';
-              });
+      // ✅ Correct Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBhkOB7czk7j2qqDiOpWGnlS0ICedOtOtk",
+        authDomain: "eskwelaenroll.firebaseapp.com",
+        projectId: "eskwelaenroll",
+        storageBucket: "eskwelaenroll.firebasestorage.app",
+        messagingSenderId: "20006672415",
+        appId: "1:20006672415:web:667c119d184e7150429d2a",
+        measurementId: "G-DNKL014SDS"
+      };
 
-              uploadArea.addEventListener('dragover', (e) => e.preventDefault());
-              
-              uploadArea.addEventListener('drop', (e) => {
-                  e.preventDefault();
-                  uploadArea.style.borderColor = 'var(--upload-border)';
-                  uploadArea.style.backgroundColor = 'var(--upload-bg)';
-                  
-                  // Handle dropped files
-                  if (e.dataTransfer.files.length) {
-                      input.files = e.dataTransfer.files;
-                      // Trigger change event manually to update the file name display
-                      input.dispatchEvent(new Event('change'));
-                  }
-              });
-          });
-          
-          // Basic form submission handler
-          const form = document.getElementById('enrollment-form');
-          form.addEventListener('submit', function(e) {
-              e.preventDefault();
-              console.log("Form Submitted. Data simulation follows:");
-              
-              // Custom message box simulation
-              const card = document.querySelector('.card');
-              
-              // Create a simple modal/message
-              const messageBox = document.createElement('div');
-              messageBox.style.cssText = `
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  width: 100%;
-                  height: 100%;
-                  background: rgba(255, 255, 255, 0.95);
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: center;
-                  align-items: center;
-                  border-radius: var(--radius);
-                  z-index: 1000;
-                  padding: 40px;
-                  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
-                  opacity: 0;
-                  transition: opacity 0.5s ease;
-              `;
-              
-              messageBox.innerHTML = `
-                  <i class="fas fa-check-circle" style="font-size: 60px; color: var(--accent-color); margin-bottom: 20px;"></i>
-                  <h3 style="font-size: 24px; color: var(--primary); margin-bottom: 10px;">Enrollment Successful!</h3>
-                  <p style="font-size: 16px; color: var(--text-light); text-align: center;">Thank you for submitting the student registration form. A confirmation email has been sent.</p>
-                  <button id="close-message" class="btn btn-primary" style="margin-top: 25px; width: auto; padding: 10px 30px;">
-                      Close
-                  </button>
-              `;
+      // ✅ Initialize Firebase correctly
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
 
-              card.style.position = 'relative';
-              card.appendChild(messageBox);
-              
-              // Animate in
-              setTimeout(() => {
-                  messageBox.style.opacity = 1;
-              }, 10);
-              
-              document.getElementById('close-message').addEventListener('click', () => {
-                  messageBox.style.opacity = 0;
-                  setTimeout(() => {
-                      messageBox.remove();
-                      form.reset();
-                      // Reset file name displays
-                      fileInputs.forEach(item => {
-                        document.getElementById(item.nameId).textContent = 'No file selected.';
-                      });
-                  }, 500);
-              });
-          });
+      // ✅ Authentication (anonymous)
+      async function authenticate() {
+        try {
+          await signInAnonymously(auth);
+          console.log("Firebase Auth Ready. User ID:", auth.currentUser?.uid || 'Anonymous');
+        } catch (error) {
+          console.error("Authentication failed:", error);
+          showMessageBox("Failed to authenticate with Firebase.");
+        }
+      }
+      authenticate();
+
+      // --- UTILITIES ---
+      const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (error) => reject(error);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function showMessageBox(message) {
+        const box = document.getElementById('error-message-box');
+        document.getElementById('error-message-text').textContent = message;
+        box.classList.add('show');
+      }
+
+      function closeMessageBox() {
+        document.getElementById('error-message-box').classList.remove('show');
+      }
+      window.closeMessageBox = closeMessageBox;
+
+      // --- FILE UPLOAD PREVIEW FIX ---
+      document.querySelectorAll('input[type="file"]').forEach(input => {
+        input.addEventListener('change', (event) => {
+          const file = event.target.files[0];
+          const nameField = document.getElementById(`name-${event.target.id.split('-')[1]}`);
+          if (file) nameField.textContent = file.name;
+
+          const icon = event.target.parentElement.querySelector('.upload-icon');
+
+          // ✅ Remove stretching, show preview only if it's an image
+          if (file && file.type.startsWith("image/")) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.style.maxWidth = "100px";
+            img.style.maxHeight = "100px";
+            img.style.borderRadius = "8px";
+            img.style.marginTop = "8px";
+
+            // Remove old preview if any
+            const oldPreview = event.target.parentElement.querySelector('img');
+            if (oldPreview) oldPreview.remove();
+
+            event.target.parentElement.appendChild(img);
+            icon.style.display = "none";
+          }
+        });
+      });
+
+      // --- FORM SUBMIT ---
+      const form = document.getElementById('enrollment-form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const loading = document.getElementById('loading-overlay');
+        loading.classList.add('active');
+
+        try {
+          const student = {
+            firstName: document.getElementById('first-name').value.trim(),
+            middleName: document.getElementById('middle-name').value.trim(),
+            lastName: document.getElementById('last-name').value.trim(),
+            dob: document.getElementById('dob').value,
+            gender: document.querySelector('input[name="gender"]:checked')?.value,
+            address: document.getElementById('address').value.trim(),
+            contact: document.getElementById('contact-number').value.trim(),
+            guardian: {
+              name: document.getElementById('guardian-name').value.trim(),
+              relationship: document.getElementById('relationship').value.trim(),
+              contact: document.getElementById('guardian-contact').value.trim(),
+              address: document.getElementById('guardian-address').value.trim(),
+            },
+            grade: document.querySelector('input[name="grade"]:checked')?.value
+          };
+
+          const birthCert = await fileToBase64(document.getElementById('doc-birthcert').files[0]);
+          const reportCard = await fileToBase64(document.getElementById('doc-reportcard').files[0]);
+          const goodMoralCert = await fileToBase64(document.getElementById('doc-goodmoral').files[0]);
+
+          student.documents = { birthCert, reportCard, goodMoralCert };
+
+          const docRef = doc(db, "enrollments", `${student.lastName}-${Date.now()}`);
+          await setDoc(docRef, student);
+
+          loading.classList.remove('active');
+          alert("Enrollment submitted successfully!");
+          form.reset();
+        } catch (error) {
+          loading.classList.remove('active');
+          console.error("Submission failed:", error);
+          showMessageBox("Failed to submit form. Check console for details.");
+        }
       });
     </script>
+
   </body>
 </html>

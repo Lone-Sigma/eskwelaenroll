@@ -1,0 +1,36 @@
+/* ============================================
+   POP-UP FLAG ALERT STYLING
+============================================ */
+#message-box {
+  position: fixed;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 90%;
+  max-width: 500px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  text-align: center;
+  font-weight: bold;
+  display: none;
+}
+
+#message-box.active {
+  top: 20px;
+}
+
+.error-message {
+  color: var(--danger, #a94442);
+  border: 1px solid var(--danger, #a94442);
+  background-color: var(--error-bg, #fcebeb);
+}
+
+.success-message {
+  color: var(--primary, #3c763d);
+  border: 1px solid var(--primary, #3c763d);
+  background-color: var(--success-bg, #e6f7ef);
+}
+

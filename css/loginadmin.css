@@ -1,0 +1,294 @@
+/* --- GLOBAL STYLES & VARIABLES (Light Mode with Green/Teal Palette) --- */
+:root {
+  /* Base Colors - Adjusted for Light Mode */
+  --primary: #007769; /* Dark Teal Green */
+  --primary-light: #00b4a5; /* Bright Teal */
+  --secondary: #38a3a5; /* Mid Teal */
+  --danger: #ef476f;
+  --dark: #2d3748; /* Dark text/headers */
+  --light: #ffffff; /* Card/Surface white */
+  --border: #e9ecef;
+  --text: var(--dark); /* Main text color */
+  --text-light: #718096; /* Light gray text/labels */
+  --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --transition: all 0.3s ease;
+
+  /* Background Colors (Light Theme) */
+  --hero-bg-gradient-start: #f5f7fa; /* Very Light Gray */
+  --hero-bg-gradient-end: #ffffff; /* White */
+  --accent-color: #57cc99; /* Light Mint/Accent Green */
+}
+
+/* Reset & base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  /* Light mode background gradient */
+  background: linear-gradient(
+    135deg,
+    var(--hero-bg-gradient-start) 0%,
+    var(--hero-bg-gradient-end) 100%
+  );
+  color: var(--text); /* Dark text on light background */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: auto;
+  padding: 20px;
+}
+
+/* --- HEADER STYLES --- */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.logo a {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.logo-icon {
+  font-size: 32px;
+  margin-right: 10px;
+  color: var(--accent-color);
+  text-shadow:
+    1px 1px 0 var(--secondary),
+    2px 2px 0 var(--primary-light),
+    3px 3px 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.logo a:hover .logo-icon {
+  transform: scale(1.05);
+}
+
+.logo a:hover {
+  color: var(--primary);
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.btn {
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+  border: 1px solid transparent;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.btn-outline {
+  color: var(--dark);
+  border-color: var(--border);
+  background-color: transparent;
+}
+
+.btn-outline:hover {
+  background-color: var(--border);
+  border-color: var(--text-light);
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent-color) 0%, var(--primary-light) 100%);
+  color: var(--dark);
+  border: none;
+  box-shadow: 0 4px 15px rgba(87, 204, 153, 0.4);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, var(--primary-light) 0%, var(--accent-color) 100%);
+  box-shadow: 0 6px 20px rgba(87, 204, 153, 0.6);
+  transform: translateY(-2px);
+}
+
+/* --- LOGIN CARD STYLES --- */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--light);
+  border-radius: var(--radius);
+  padding: 40px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border);
+  margin-top: 80px;
+}
+
+.login-container h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--dark);
+  text-align: center;
+}
+
+.login-container p {
+  font-size: 16px;
+  color: var(--text-light);
+  margin-bottom: 30px;
+}
+
+.login-container a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition);
+}
+
+.login-container a:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  width: 100%;
+}
+
+.input-group label {
+  display: block;
+  color: var(--text-light);
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--light);
+  color: var(--text);
+  font-size: 16px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(87, 204, 153, 0.5);
+}
+
+.login-button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--accent-color) 0%, var(--primary-light) 100%);
+  color: var(--dark);
+  transition: var(--transition);
+  box-shadow: 0 8px 20px rgba(87, 204, 153, 0.5);
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(87, 204, 153, 0.7);
+}
+
+/* --- MEDIA QUERIES --- */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 20px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .logo a {
+    font-size: 20px;
+  }
+
+  .logo-icon {
+    font-size: 24px;
+  }
+
+  .card h2 {
+    font-size: 24px;
+  }
+
+  .btn,
+  .nav-links a {
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  .role-selection {
+    grid-template-columns: 1fr; /* Stack roles on small screens */
+  }
+
+  .input-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 30px 20px;
+    margin-top: 120px;
+    box-shadow: none;
+    border: none;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .login-container h2 {
+    font-size: 24px;
+  }
+}
