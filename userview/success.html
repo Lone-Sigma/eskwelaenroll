@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eSkwelaEnroll - Submission Successful</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- GLOBAL STYLES & VARIABLES (Copied from original) --- */
+      :root {
+        --primary: #007769;
+        --primary-light: #00b4a5;
+        --secondary: #38a3a5;
+        --danger: #ef476f;
+        --dark: #2d3748;
+        --light: #ffffff;
+        --border: #e9ecef;
+        --text: var(--dark);
+        --text-light: #718096;
+        --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --radius: 10px;
+        --radius-sm: 6px;
+        --transition: all 0.3s ease;
+        --hero-bg-gradient-start: #f5f7fa;
+        --hero-bg-gradient-end: #ffffff;
+        --accent-color: #57cc99;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          var(--hero-bg-gradient-start) 0%,
+          var(--hero-bg-gradient-end) 100%
+        );
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* --- HEADER (Copied from original) --- */
+      .header {
+        background-color: var(--light);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+      }
+
+      .logo a {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--dark);
+        text-decoration: none;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo-icon {
+        font-size: 32px;
+        margin-right: 10px;
+        color: var(--accent-color);
+        text-shadow: 1px 1px 0 var(--secondary),
+          2px 2px 0 var(--primary-light),
+          3px 3px 5px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+      }
+
+      .logo a:hover .logo-icon {
+        transform: scale(1.05);
+      }
+
+      .logo a:hover {
+        color: var(--primary);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      
+      .nav-links a.nav-link {
+        color: var(--text-light); 
+        text-decoration: none;
+        font-weight: 500;
+        transition: color var(--transition);
+        padding: 5px 0;
+        position: relative;
+        font-size: 14px;
+      }
+      
+      .nav-links a.nav-link:hover {
+          color: var(--dark);
+      }
+      
+      .nav-links a.nav-link.active {
+          color: var(--primary);
+          font-weight: 600;
+      }
+      .nav-links a.nav-link:after {
+          content: "";
+          position: absolute;
+          width: 0;
+          height: 2px;
+          display: block;
+          margin-top: 5px;
+          background: var(--accent-color);
+          transition: width var(--transition);
+          left: 50%;
+          transform: translateX(-50%);
+      }
+
+      .nav-links a.nav-link.active:after,
+      .nav-links a.nav-link:hover:after {
+          width: 100%;
+      }
+
+      .auth-buttons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .btn {
+        padding: 8px 18px;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        border: 1px solid transparent;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          90deg,
+          var(--accent-color) 0%,
+          var(--primary-light) 100%
+        );
+        color: var(--dark);
+        border: none;
+        box-shadow: 0 4px 15px rgba(87, 204, 153, 0.4);
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(
+          90deg,
+          var(--primary-light) 0%,
+          var(--accent-color) 100%
+        );
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(87, 204, 153, 0.6);
+      }
+
+      /* --- HERO/SUCCESS SECTION (Modified for success message) --- */
+      .hero-section {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 50px 20px;
+        position: relative;
+        z-index: 1;
+      }
+      
+      .icon-success {
+          font-size: 80px;
+          color: var(--accent-color);
+          margin-bottom: 30px;
+          animation: bounceIn 0.8s ease-out;
+      }
+
+      .hero-section .welcome-text {
+        font-size: 16px; /* Slightly larger */
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+        font-weight: 700; /* Bolder */
+      }
+
+      .hero-section h1 {
+        font-size: 40px; /* Reduced for a "success" focus */
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 25px;
+        max-width: 900px;
+        color: var(--dark);
+      }
+      
+      /* New style for main success message content */
+      .hero-section h2 {
+          font-size: 28px;
+          font-weight: 600;
+          color: var(--primary);
+          margin-bottom: 20px;
+      }
+
+      .hero-section h1 span {
+        background: linear-gradient(45deg, var(--primary-light), var(--accent-color));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero-section p {
+        font-size: 18px;
+        font-weight: 400;
+        max-width: 700px;
+        margin-bottom: 40px;
+        line-height: 1.6;
+        color: var(--text-light);
+      }
+
+      .hero-button {
+        padding: 15px 30px;
+        font-size: 18px;
+        border-radius: var(--radius);
+        background: linear-gradient(
+          90deg,
+          var(--accent-color) 0%,
+          var(--primary-light) 100%
+        );
+        color: var(--dark);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        box-shadow: 0 8px 25px rgba(87, 204, 153, 0.5);
+      }
+
+      .hero-button:hover {
+        background: linear-gradient(
+          90deg,
+          var(--primary-light) 0%,
+          var(--accent-color) 100%
+        );
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(87, 204, 153, 0.7);
+      }
+      
+      /* Added animation for success icon */
+      @keyframes bounceIn {
+          0% { transform: scale(0.3); opacity: 0; }
+          50% { transform: scale(1.1); opacity: 1; }
+          70% { transform: scale(0.9); }
+          100% { transform: scale(1); }
+      }
+
+      /* --- BACKGROUND ELEMENTS (Copied from original) --- */
+      .background-element {
+        position: absolute;
+        opacity: 0.1;
+        filter: blur(10px);
+        animation: floatEffect 15s ease-in-out infinite alternate;
+      }
+
+      .element-1 {
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+        border-radius: 50%;
+        top: 10%;
+        left: 5%;
+      }
+
+      .element-2 {
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+        border-radius: 50%;
+        bottom: 15%;
+        right: 8%;
+      }
+
+      .element-3 {
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+        border-radius: 50%;
+        top: 50%;
+        left: 20%;
+      }
+
+      @keyframes floatEffect {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(20px, 30px) scale(1.05); }
+        100% { transform: translate(0, 0) scale(1); }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <a href="#" id="logo-home">
+          <i class="fas fa-clipboard-list logo-icon"></i>
+          eSkwelaEnroll
+        </a>
+      </div>
+      <nav class="nav-links" id="main-nav">
+        <a href="/userview/home.html" class="nav-link active" id="nav-home">Home</a>
+        <a href="/userview/studentform.html" class="btn btn-primary" id="btn-enroll">New Enrollment</a>
+      </nav>
+    </header>
+
+    <main class="hero-section">
+      <i class="fas fa-check-circle icon-success"></i>
+
+      <div class="welcome-text">Enrollment Form Submitted</div>
+      
+      <h1>
+        Thank You for Enrolling!
+      </h1>
+      
+      <h2>Your submission has been received.</h2>
+      
+      <p>
+        Our system will be looking for your appointment as soon as possible. 
+        Please keep an eye on your email for further instructions regarding the 
+        appointment schedule and required physical documents for verification.
+      </p>
+
+      <a href="/userview/home.html" class="hero-button" id="hero-continue-button">Continue to Home</a>
+    </main>
+
+    <div class="background-element element-1"></div>
+    <div class="background-element element-2"></div>
+    <div class="background-element element-3"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const handleNavigation = (target) => {
+          // You should use the actual paths for the 'home' and 'enroll' pages.
+          switch (target) {
+            case "home": window.location.href = "/userview/home.html"; break;
+            case "enroll": window.location.href = "/userview/studentform.html"; break;
+          }
+        };
+        // Setup event listeners for navigation elements
+        document.getElementById("logo-home").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("home"); });
+        document.getElementById("nav-home").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("home"); });
+        document.getElementById("btn-enroll").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("enroll"); });
+        document.getElementById("hero-continue-button").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("home"); });
+      });
+    </script>
+  </body>
+</html>

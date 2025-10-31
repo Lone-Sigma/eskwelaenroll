@@ -259,13 +259,6 @@
           grid-column: 1 / -1;
       }
       
-      .documents-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr); /* 3 equal columns for documents */
-          gap: 20px;
-          margin-top: 20px;
-      }
-
       .form-group {
         margin-bottom: 20px;
       }
@@ -278,7 +271,8 @@
         margin-bottom: 6px;
       }
       
-      .form-group input:not([type="radio"]):not([type="checkbox"]) {
+      .form-group input:not([type="radio"]):not([type="checkbox"]), 
+      .form-group select { /* ADDED SELECT */
         width: 100%;
         padding: 12px;
         border: 1px solid var(--border);
@@ -287,9 +281,21 @@
         color: var(--dark);
         transition: border-color var(--transition), box-shadow var(--transition);
         background-color: #fcfcfc;
+        /* Select specific styling */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
       }
 
-      .form-group input:not([type="radio"]):not([type="checkbox"]):focus {
+      #relationship {
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007769%22%20d%3D%22M287%2069.9L146.4%20205.1l-140-135.2c-5.7-5.5-14.8-5.5-20.5%200-5.7%205.5-5.7%2014.5%200%2020L135.8%20216.7c5.7%205.5%2014.8%205.5%2020.5%200l130.7-126.8c5.7-5.5%205.7-14.5%200-20z%22%2F%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.7em top 50%;
+        background-size: 0.65em auto;
+      }
+
+      .form-group input:not([type="radio"]):not([type="checkbox"]):focus,
+      .form-group select:focus { /* ADDED SELECT */
         border-color: var(--primary-light);
         outline: none;
         box-shadow: 0 0 0 3px rgba(87, 204, 153, 0.3);
@@ -356,64 +362,56 @@
         box-shadow: 0 2px 5px rgba(87, 204, 153, 0.3); 
       }
       
-      /* --- FILE UPLOAD BOX STYLES (UPDATED COLORS) --- */
-      .file-upload-box {
-          text-align: center;
+      /* --- GOOGLE DRIVE LINK STYLES --- */
+      .google-drive-instruction-box {
+          border: 1px solid var(--primary-light);
+          border-radius: var(--radius-sm);
+          background-color: var(--upload-bg); /* Use light teal background */
+          padding: 15px;
+          margin-bottom: 20px;
+          text-align: left;
       }
-      
-      .upload-area {
-          border: 3px dashed var(--upload-border);
-          border-radius: var(--radius);
-          background-color: var(--upload-bg);
-          padding: 20px;
-          cursor: pointer;
-          transition: var(--transition);
-          position: relative;
-          overflow: hidden;
-      }
-      
-      .upload-area:hover {
-          border-color: var(--upload-icon);
-          box-shadow: 0 0 10px rgba(0, 119, 105, 0.2); /* Use primary color shadow */
-      }
-      
-      .upload-area .upload-icon {
-          font-size: 40px;
-          color: var(--upload-icon);
-          margin-bottom: 10px;
-      }
-      
-      .upload-area p {
-          margin: 0;
-          font-size: 12px;
-          color: var(--text-light);
-          line-height: 1.4;
-      }
-      
-      .upload-area .upload-instruction {
-          font-weight: 600;
-          color: var(--dark);
-          font-size: 13px;
-          margin-bottom: 5px;
-      }
-      
-      .upload-area input[type="file"] {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0; /* Hide the actual file input */
-          cursor: pointer;
-      }
-      
-      .uploaded-file-name {
-          font-size: 12px;
+      .google-drive-instruction-box h4 {
+          font-size: 14px;
           color: var(--primary);
-          font-weight: 500;
-          margin-top: 5px;
-          display: block;
+          font-weight: 700;
+          margin-bottom: 5px;
+          display: flex;
+          align-items: center;
       }
+      .google-drive-instruction-box h4 i {
+          margin-right: 8px;
+          font-size: 16px;
+      }
+      .google-drive-instruction-box ul {
+          list-style: none;
+          padding-left: 0;
+          margin-top: 10px;
+      }
+      .google-drive-instruction-box ul li {
+          font-size: 13px;
+          color: var(--dark);
+          line-height: 1.6;
+          padding-left: 20px;
+          position: relative;
+      }
+      .google-drive-instruction-box ul li:before {
+          content: "\f058"; /* Checkmark icon */
+          font-family: 'Font Awesome 6 Free';
+          font-weight: 900;
+          position: absolute;
+          left: 0;
+          color: var(--primary);
+      }
+      .google-drive-instruction-box p.access-note {
+          margin-top: 10px;
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--danger);
+          padding: 5px 0;
+          border-top: 1px dashed var(--border);
+      }
+      /* End of Google Drive Link Styles */
 
       .form-actions {
         grid-column: 1 / -1;
@@ -482,32 +480,59 @@
       }
       
       .message-box {
-          background-color: var(--light);
-          padding: 25px;
-          border-radius: var(--radius);
-          box-shadow: var(--shadow-lg);
-          max-width: 400px;
-          width: 90%;
-          text-align: center;
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          z-index: 10001;
-          display: none; /* Controlled by JS */
-          border-top: 5px solid var(--danger);
+        background-color: var(--light);
+        padding: 25px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10001;
+        display: none; /* Controlled by JS */
+        border-top: 5px solid var(--danger); /* default: error red */
       }
+
       .message-box.show {
-          display: block;
+        display: block;
       }
+
       .message-box h3 {
-          color: var(--danger);
-          margin-bottom: 10px;
+        color: var(--danger);
+        margin-bottom: 10px;
       }
+
       .message-box p {
-          color: var(--dark);
-          margin-bottom: 20px;
-          font-size: 15px;
+        color: var(--dark);
+        margin-bottom: 20px;
+        font-size: 15px;
+      }
+
+      /* ✅ Success message styling */
+      .message-box.success {
+        border-top: 5px solid var(--success); /* green border */
+      }
+
+      .message-box.success h3 {
+        color: var(--success); /* green title text */
+      }
+
+      .message-box.success button {
+        background-color: var(--success);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .message-box.success button:hover {
+        background-color: #3da75c; /* slightly darker green on hover */
       }
 
 
@@ -532,9 +557,6 @@
         }
         .section-title-col {
             margin-top: 0;
-        }
-        .documents-grid {
-            grid-template-columns: 1fr; /* Stack documents on mobile */
         }
       }
 
@@ -572,17 +594,22 @@
     </style>
   </head>
   <body>
-    <!-- Message Box for Errors -->
     <div id="error-message-box" class="message-box">
-        <h3>Submission Error</h3>
-        <p id="error-message-text"></p>
-        <button class="btn btn-outline" onclick="closeMessageBox()">Close</button>
+      <h3>Submission Error</h3>
+      <p id="error-message-text"></p>
+      <button class="btn btn-outline" onclick="closeMessageBox()">Close</button>
     </div>
 
-    <!-- Loading/Status Overlay -->
+    <!-- ✅ Success Message Box -->
+    <div id="success-message-box" class="message-box success">
+      <h3>Success</h3>
+      <p id="success-message-text">Enrollment submitted successfully!</p>
+      <button onclick="continueToHome()">Continue</button>
+    </div>
+
     <div id="loading-overlay" class="form-status">
-        <div class="loader"></div>
-        <p id="loading-text">Submitting your enrollment... Please wait.</p>
+      <div class="loader"></div>
+      <p id="loading-text">Submitting your enrollment... Please wait.</p>
     </div>
 
     <header class="header">
@@ -593,7 +620,7 @@
         </a>
       </div>
       <nav class="nav-links" id="main-nav">
-        <a href="#" class="nav-link" id="nav-home">Home</a>
+        <a href="home.html" class="nav-link" id="nav-home">Home</a>
         <a href="#" class="nav-link active" id="btn-enroll">Enrollment</a>
       </nav>
     </header>
@@ -601,27 +628,44 @@
     <main class="form-container">
       <div class="card">
         <h2>Student Registration</h2>
-        <p>Please complete all sections to successfully enroll the student. All uploaded documents will be stored as Base64 data within a 1MB limit.</p>
+        <p>Please complete all sections to successfully enroll the student.</p>
 
         <form id="enrollment-form">
           <div class="form-grid">
             
             <div class="section-column student-info">
+
               <div class="section-title-col">PERSONAL INFORMATION</div>
+
+              <!-- ✅ Transferee Dropdown -->
+              <div class="form-group">
+                <label for="transferee">Are you a transferee?</label>
+                  <select id="transferee" required>
+                    <option value="">Select</option>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+              </div>
               
+              <!-- ✅ Student ID -->
+              <div class="form-group">
+                <label for="student-id">Student ID:</label>
+                <input type="text" id="student-id" placeholder="Enter Student ID" required />
+              </div>
+
               <div class="form-group">
                 <label for="first-name">FIRST NAME</label>
-                <input type="text" id="first-name" placeholder="John" required />
+                <input type="text" id="first-name" placeholder="Enter your first name" required />
               </div>
 
               <div class="form-group">
                 <label for="middle-name">MIDDLE NAME</label>
-                <input type="text" id="middle-name" placeholder="Doe" />
+                <input type="text" id="middle-name" placeholder="Enter your middle name" />
               </div>
 
               <div class="form-group">
                 <label for="last-name">LAST NAME</label>
-                <input type="text" id="last-name" placeholder="Smith" required />
+                <input type="text" id="last-name" placeholder="Enter your last name" required />
               </div>
               
               <div class="input-row">
@@ -630,30 +674,25 @@
                   <input type="date" id="dob" required />
                   <p style="font-size:12px; color:var(--text-light); margin-top: 5px;">mm-dd-yyyy</p>
                 </div>
-                
+
                 <div class="form-group">
-                  <label>GENDER</label>
-                  <div class="radio-selection">
-                    <div class="custom-radio">
-                        <input type="radio" id="gender-male" name="gender" value="Male" required>
-                        <label for="gender-male">MALE</label>
-                    </div>
-                    <div class="custom-radio">
-                        <input type="radio" id="gender-female" name="gender" value="Female">
-                        <label for="gender-female">FEMALE</label>
-                    </div>
-                  </div>
+                  <label for="gender">GENDER</label>
+                  <select id="gender" required>
+                      <option value="">-- Select Gender --</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                  </select>
                 </div>
               </div>
 
               <div class="form-group">
                 <label for="address">ADDRESS</label>
-                <input type="text" id="address" placeholder="123 Main St, Anytown" required />
+                <input type="text" id="address" placeholder="Enter valid address" required />
               </div>
 
               <div class="form-group">
                 <label for="contact-number">CONTACT NUMBER</label>
-                <input type="tel" id="contact-number" placeholder="555-1234" required />
+                <input type="tel" id="contact-number" placeholder="Enter valid contact number" required />
               </div>
 
             </div>
@@ -663,22 +702,30 @@
 
               <div class="form-group">
                 <label for="guardian-name">FULL NAME</label>
-                <input type="text" id="guardian-name" placeholder="Jane Doe" required />
+                <input type="text" id="guardian-name" placeholder="Enter full name" required />
               </div>
               
               <div class="form-group">
                 <label for="relationship">RELATIONSHIP</label>
-                <input type="text" id="relationship" placeholder="Mother" required />
+                <select id="relationship" required>
+                    <option value="">-- Select Relationship --</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Father">Father</option>
+                    <option value="LegalGuardian">Legal Guardian</option>
+                    <option value="Grandparent">Grandparent</option>
+                    <option value="Sibling">Sibling</option>
+                    <option value="Other">Other Relative</option>
+                </select>
               </div>
 
               <div class="form-group">
                 <label for="guardian-contact">CONTACT NUMBER</label>
-                <input type="tel" id="guardian-contact" placeholder="555-5678" required />
+                <input type="tel" id="guardian-contact" placeholder="Enter your contact number" required />
               </div>
               
               <div class="form-group">
                 <label for="guardian-address">ADDRESS</label>
-                <input type="text" id="guardian-address" placeholder="Same as student" required />
+                <input type="text" id="guardian-address" placeholder="Enter valid address" required />
               </div>
               
               <div class="section-title-col" style="margin-top: 30px;">EDUCATIONAL INFORMATION</div>
@@ -702,46 +749,29 @@
             </div>
             
             <div class="full-width-section">
-                <div class="section-title-col">REQUIRED DOCUMENTS</div>
+                <div class="section-title-col">REQUIRED DOCUMENTS (GOOGLE DRIVE LINK)</div>
                 
-                <div class="documents-grid">
-                    
-                    <div class="file-upload-box">
-                        <label for="doc-birthcert">BIRTH CERTIFICATE</label>
-                        <div class="upload-area">
-                            <!-- Data attribute to store the Base64 status/result -->
-                            <input type="file" id="doc-birthcert" accept=".jpg, .jpeg, .png" data-doc-name="birthCert" required>
-                            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                            <p class="upload-instruction">Click here to upload your file or drag.</p>
-                            <p>Supported Format: JPG, PNG (Under 1MB total)</p>
-                            <span class="uploaded-file-name" id="name-birthcert">No file selected.</span>
-                        </div>
-                    </div>
-                    
-                    <div class="file-upload-box">
-                        <label for="doc-reportcard">REPORT CARD / FORM 138</label>
-                        <div class="upload-area">
-                            <input type="file" id="doc-reportcard" accept=".jpg, .jpeg, .png" data-doc-name="reportCard" required>
-                            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                            <p class="upload-instruction">Click here to upload your file or drag.</p>
-                            <p>Supported Format: JPG, PNG (Under 1MB total)</p>
-                            <span class="uploaded-file-name" id="name-reportcard">No file selected.</span>
-                        </div>
-                    </div>
-                    
-                    <div class="file-upload-box">
-                        <label for="doc-goodmoral">GOOD MORAL CERTIFICATE</label>
-                        <div class="upload-area">
-                            <input type="file" id="doc-goodmoral" accept=".jpg, .jpeg, .png" data-doc-name="goodMoralCert" required>
-                            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                            <p class="upload-instruction">Click here to upload your file or drag.</p>
-                            <p>Supported Format: JPG, PNG (Under 1MB total)</p>
-                            <span class="uploaded-file-name" id="name-goodmoral">No file selected.</span>
-                        </div>
-                    </div>
-                    
+                <div class="google-drive-instruction-box">
+                    <h4><i class="fas fa-folder-open"></i> Document Submission Instructions</h4>
+                    <p>Please upload all required documents into a single folder in your Google Drive, then share the link below. </p>
+                    <ul>
+                        <li>Upload a folder containing:
+                            <ul>
+                                <li><strong>Birth Certificate</strong></li>
+                                <li><strong>Report Card / Form 138</strong></li>
+                                <li><strong>Good Moral Certificate</strong> (if a transferee)</li>
+                            </ul>
+                        </li>
+                        <li>Crucial: The folder link **MUST BE ACCESSIBLE** to anyone with the link ("Viewer" access).</li>
+                    </ul>
+                    <p class="access-note"><i class="fas fa-exclamation-triangle"></i> Enrollment will be delayed if the link is inaccessible or documents are incomplete.</p>
                 </div>
                 
+                <div class="form-group">
+                    <label for="drive-link">GOOGLE DRIVE FOLDER LINK (Shared)</label>
+                    <input type="url" id="drive-link" placeholder="e.g., https://drive.google.com/drive/folders/xxxxxxxxxxxxxxxx" required />
+                </div>
+
             </div>
 
             <div class="form-actions">
@@ -759,14 +789,16 @@
     </main>
 
     <script type="module">
+      // ✅ Import Firebase SDKs
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
       import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-      import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-      // ✅ Correct Firebase configuration
+      // ✅ Firebase configuration
       const firebaseConfig = {
         apiKey: "AIzaSyBhkOB7czk7j2qqDiOpWGnlS0ICedOtOtk",
         authDomain: "eskwelaenroll.firebaseapp.com",
+        databaseURL: "https://eskwelaenroll-default-rtdb.firebaseio.com/",
         projectId: "eskwelaenroll",
         storageBucket: "eskwelaenroll.firebasestorage.app",
         messagingSenderId: "20006672415",
@@ -774,119 +806,143 @@
         measurementId: "G-DNKL014SDS"
       };
 
-      // ✅ Initialize Firebase correctly
+      // ✅ Initialize Firebase
       const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+      const db = getDatabase(app);
       const auth = getAuth(app);
 
-      // ✅ Authentication (anonymous)
-      async function authenticate() {
-        try {
-          await signInAnonymously(auth);
-          console.log("Firebase Auth Ready. User ID:", auth.currentUser?.uid || 'Anonymous');
-        } catch (error) {
-          console.error("Authentication failed:", error);
-          showMessageBox("Failed to authenticate with Firebase.");
+      // ✅ Anonymous Sign-In
+      signInAnonymously(auth)
+        .then(() => console.log("Signed in anonymously"))
+        .catch((error) => console.error("Auth Error:", error));
+
+      // ✅ Helper: Show/Hide loader
+      function toggleLoading(show, text = "Submitting your enrollment... Please wait.") {
+        const overlay = document.getElementById("loading-overlay");
+        const loadingText = document.getElementById("loading-text");
+        if (show) {
+          loadingText.textContent = text;
+          overlay.classList.add("active");
+        } else {
+          overlay.classList.remove("active");
         }
       }
-      authenticate();
 
-      // --- UTILITIES ---
-      const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
-
-      function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
-          reader.readAsDataURL(file);
-        });
+      // ✅ Helper: Show error message
+      function showError(message) {
+        const box = document.getElementById("error-message-box");
+        const text = document.getElementById("error-message-text");
+        text.textContent = message;
+        box.classList.add("show");
       }
 
-      function showMessageBox(message) {
-        const box = document.getElementById('error-message-box');
-        document.getElementById('error-message-text').textContent = message;
-        box.classList.add('show');
+      // ✅ Helper: Show success message
+      function showSuccess(message) {
+        const box = document.getElementById("success-message-box");
+        const text = document.getElementById("success-message-text");
+        text.textContent = message;
+        box.classList.add("show");
       }
 
-      function closeMessageBox() {
-        document.getElementById('error-message-box').classList.remove('show');
-      }
-      window.closeMessageBox = closeMessageBox;
+      // ✅ Close message boxes
+      window.closeMessageBox = function () {
+        document.getElementById("error-message-box").classList.remove("show");
+      };
 
-      // --- FILE UPLOAD PREVIEW FIX ---
-      document.querySelectorAll('input[type="file"]').forEach(input => {
-        input.addEventListener('change', (event) => {
-          const file = event.target.files[0];
-          const nameField = document.getElementById(`name-${event.target.id.split('-')[1]}`);
-          if (file) nameField.textContent = file.name;
+      window.continueToHome = function () {
+        document.getElementById("success-message-box").classList.remove("show");
+        window.location.href = "success.html";
+      };
 
-          const icon = event.target.parentElement.querySelector('.upload-icon');
+      // ✅ Transferee Logic (Disable Student ID if Yes)
+      const transfereeSelect = document.getElementById("transferee");
+      const studentIdInput = document.getElementById("student-id");
 
-          // ✅ Remove stretching, show preview only if it's an image
-          if (file && file.type.startsWith("image/")) {
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(file);
-            img.style.maxWidth = "100px";
-            img.style.maxHeight = "100px";
-            img.style.borderRadius = "8px";
-            img.style.marginTop = "8px";
-
-            // Remove old preview if any
-            const oldPreview = event.target.parentElement.querySelector('img');
-            if (oldPreview) oldPreview.remove();
-
-            event.target.parentElement.appendChild(img);
-            icon.style.display = "none";
-          }
-        });
+      transfereeSelect.addEventListener("change", () => {
+        if (transfereeSelect.value === "Yes") {
+          studentIdInput.value = "N/A";
+          studentIdInput.disabled = true;
+        } else {
+          studentIdInput.value = "";
+          studentIdInput.disabled = false;
+        }
       });
 
-      // --- FORM SUBMIT ---
-      const form = document.getElementById('enrollment-form');
-      form.addEventListener('submit', async (e) => {
+      // ✅ Handle form submission
+      document.getElementById("enrollment-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        const loading = document.getElementById('loading-overlay');
-        loading.classList.add('active');
+        toggleLoading(true);
 
         try {
+          // ✅ Collect form values
           const student = {
-            firstName: document.getElementById('first-name').value.trim(),
-            middleName: document.getElementById('middle-name').value.trim(),
-            lastName: document.getElementById('last-name').value.trim(),
-            dob: document.getElementById('dob').value,
-            gender: document.querySelector('input[name="gender"]:checked')?.value,
-            address: document.getElementById('address').value.trim(),
-            contact: document.getElementById('contact-number').value.trim(),
-            guardian: {
-              name: document.getElementById('guardian-name').value.trim(),
-              relationship: document.getElementById('relationship').value.trim(),
-              contact: document.getElementById('guardian-contact').value.trim(),
-              address: document.getElementById('guardian-address').value.trim(),
-            },
-            grade: document.querySelector('input[name="grade"]:checked')?.value
+            studentId: document.getElementById("student-id").value.trim(),
+            transferee: document.getElementById("transferee").value,
+            firstName: document.getElementById("first-name").value.trim(),
+            middleName: document.getElementById("middle-name").value.trim(),
+            lastName: document.getElementById("last-name").value.trim(),
+            dob: document.getElementById("dob").value,
+            gender: document.getElementById("gender").value,
+            address: document.getElementById("address").value.trim(),
+            contactNumber: document.getElementById("contact-number").value.trim(),
+            intendedGrade: document.querySelector("input[name='grade']:checked")?.value || "",
+            driveLink: document.getElementById("drive-link").value.trim(),
+            status: "Pending" // 👈 Automatically set status
           };
 
-          const birthCert = await fileToBase64(document.getElementById('doc-birthcert').files[0]);
-          const reportCard = await fileToBase64(document.getElementById('doc-reportcard').files[0]);
-          const goodMoralCert = await fileToBase64(document.getElementById('doc-goodmoral').files[0]);
+          const guardian = {
+            fullName: document.getElementById("guardian-name").value.trim(),
+            relationship: document.getElementById("relationship").value,
+            contactNumber: document.getElementById("guardian-contact").value.trim(),
+            address: document.getElementById("guardian-address").value.trim()
+          };
 
-          student.documents = { birthCert, reportCard, goodMoralCert };
+          // ✅ Basic validation
+          if (
+            !student.transferee ||
+            (!studentIdInput.disabled && !student.studentId) ||
+            !student.firstName ||
+            !student.lastName ||
+            !student.dob ||
+            !student.gender ||
+            !student.intendedGrade ||
+            !guardian.fullName ||
+            !guardian.relationship
+          ) {
+            toggleLoading(false);
+            showError("Please fill in all required fields before submitting.");
+            return;
+          }
 
-          const docRef = doc(db, "enrollments", `${student.lastName}-${Date.now()}`);
-          await setDoc(docRef, student);
+          // ✅ Structure to save
+          const enrollmentData = {
+            timestamp: new Date().toISOString(),
+            student,
+            guardian
+          };
 
-          loading.classList.remove('active');
-          alert("Enrollment submitted successfully!");
-          form.reset();
+          // ✅ Save to Realtime Database
+          const newRef = push(ref(db, "enrollments"));
+          await set(newRef, enrollmentData);
+
+          // ✅ Reset form
+          document.getElementById("enrollment-form").reset();
+          transfereeSelect.value = "";
+          studentIdInput.disabled = false;
+
+          // ✅ Hide loading and show success
+          toggleLoading(false);
+          showSuccess("🎉 Enrollment submitted successfully! Your status is now 'Pending'.");
+
         } catch (error) {
-          loading.classList.remove('active');
-          console.error("Submission failed:", error);
-          showMessageBox("Failed to submit form. Check console for details.");
+          console.error("Error submitting form:", error);
+          toggleLoading(false);
+          showError("An error occurred while submitting the form. Please try again.");
         }
       });
     </script>
+
+
 
   </body>
 </html>

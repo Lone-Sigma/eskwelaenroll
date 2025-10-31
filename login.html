@@ -408,234 +408,122 @@
 
     <!-- FIREBASE AND AUTHENTICATION SETUP -->
     <script type="module">
-      import { initializeApp, setLogLevel } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"; 
-      import { 
-          getAuth, 
-          signInAnonymously,
-          signInWithCustomToken,
-          signInWithEmailAndPassword,
-          signOut 
-      } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-      import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"; // Realtime Database
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-      // Set Firebase log level to Debug
-      setLogLevel('Debug');
+  // ✅ Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBhkOB7czk7j2qqDiOpWGnlS0ICedOtOtk",
+    authDomain: "eskwelaenroll.firebaseapp.com",
+    databaseURL: "https://eskwelaenroll-default-rtdb.firebaseio.com/",
+    projectId: "eskwelaenroll",
+    storageBucket: "eskwelaenroll.firebasestorage.app",
+    messagingSenderId: "20006672415",
+    appId: "1:20006672415:web:667c119d184e7150429d2a",
+    measurementId: "G-DNKL014SDS"
+  };
 
-      // --- YOUR FIREBASE CONFIGURATION ---
-      // NOTE: This must match your project configuration.
-      const YOUR_FIREBASE_CONFIG = {
-          apiKey: "AIzaSyBhkOB7czk7j2qqDiOpWGnlS0ICedOtOtk",
-          authDomain: "eskwelaenroll.firebaseapp.com",
-          projectId: "eskwelaenroll",
-          storageBucket: "eskwelaenroll.firebasestorage.app",
-          messagingSenderId: "20006672415",
-          appId: "1:20006672415:web:667c119d184e7150429d2a",
-          // CHANGED: Using the .firebaseio.com domain as suggested by the warning
-          databaseURL: "https://eskwelaenroll-default-rtdb.firebaseio.com" 
-      };
+  // ✅ Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
 
-      // Global variables provided by the Canvas environment (using defaults if undefined)
-      const firebaseConfig = YOUR_FIREBASE_CONFIG;
-      const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+  // ✅ Backoff retry function for stability
+  async function callApiWithBackoff(apiCall, retries = 3, delay = 500) {
+    try {
+      return await apiCall();
+    } catch (error) {
+      if (retries > 0) {
+        console.warn(`Retrying... ${retries} left`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        return callApiWithBackoff(apiCall, retries - 1, delay * 2);
+      } else {
+        throw error;
+      }
+    }
+  }
 
-      let app;
-      let rtdb; 
-      let auth;
+  // ✅ Show message (success or error)
+  function showMessage(msg, isError = false) {
+    const box = document.getElementById(isError ? "error-message-box" : "success-message-box");
+    const text = document.getElementById(isError ? "error-message-text" : "success-message-text");
+    text.textContent = msg;
+    box.classList.add("show");
+  }
 
-      const messageBox = document.getElementById('message-box');
-      const loginForm = document.getElementById('login-form');
-      const emailInput = document.getElementById('email');
-      const passwordInput = document.getElementById('password');
-      const loginButton = loginForm.querySelector('.login-button');
-      
-      // =======================================================
-      // CUSTOM ALERT FLAG FUNCTIONS
-      // =======================================================
-      function showMessage(message, isError = false) {
-          if (!messageBox) return; 
-          
-          messageBox.textContent = message;
-          
-          // Clear previous classes and set new ones
-          messageBox.classList.remove('error-message', 'success-message', 'active'); 
-          
-          if (isError) {
-              messageBox.classList.add('error-message');
+  // ✅ Close popups
+  window.closeMessageBox = function () {
+    document.getElementById("error-message-box").classList.remove("show");
+  };
+  window.continueToHome = function () {
+    document.getElementById("success-message-box").classList.remove("show");
+  };
+
+  // ✅ Handle login
+  document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!email || !password) {
+      showMessage("Please enter both email and password.", true);
+      return;
+    }
+
+    try {
+      // ✅ Sign in user
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const dbRef = ref(db);
+      let userRole = null;
+      let roleData = null;
+
+      // ✅ Check for admin role
+      const adminSnapshot = await callApiWithBackoff(() => get(child(dbRef, `staff/admin/${user.uid}`)));
+
+      if (adminSnapshot.exists()) {
+        userRole = "Admin";
+        roleData = adminSnapshot.val();
+      } else {
+        // ✅ Check for registrar role
+        const registrarSnapshot = await callApiWithBackoff(() => get(child(dbRef, `staff/registrar/${user.uid}`)));
+        if (registrarSnapshot.exists()) {
+          userRole = "Registrar";
+          roleData = registrarSnapshot.val();
+        } else {
+          // ✅ Check for instructor role
+          const instructorSnapshot = await callApiWithBackoff(() => get(child(dbRef, `staff/instructor/${user.uid}`)));
+          if (instructorSnapshot.exists()) {
+            userRole = "Instructor";
+            roleData = instructorSnapshot.val();
+          }
+        }
+      }
+
+      if (userRole) {
+        const fullName = roleData.fullName || email;
+        showMessage(`Login successful! Welcome, ${fullName} (${userRole}). Redirecting...`);
+
+        // ✅ Redirect to correct dashboard
+        setTimeout(() => {
+          if (userRole === "Instructor") {
+            window.location.href = "instructorview/dashboard.html";
           } else {
-              messageBox.classList.add('success-message');
+            window.location.href = "adminview/dashboard.html";
           }
-
-          messageBox.style.display = 'block';
-          messageBox.classList.add('active'); // Triggers CSS slide-in
-
-          // Auto-hide successful messages after 5 seconds
-          if (!isError) {
-              setTimeout(() => {
-                  hideMessage();
-              }, 5000); 
-          }
+        }, 2000);
+      } else {
+        showMessage("Account not found in staff records. Contact admin for access.", true);
       }
+    } catch (error) {
+      console.error("Login failed:", error);
+      showMessage("Login failed. Please check your credentials and try again.", true);
+    }
+  });
+</script>
 
-      function hideMessage() {
-          if (!messageBox) return; 
-          messageBox.classList.remove('active'); // Triggers CSS slide-out
-          setTimeout(() => {
-              messageBox.style.display = 'none';
-              messageBox.textContent = ''; 
-          }, 500); 
-      }
-
-      // =======================================================
-      // HELPER AND CORE FUNCTIONS
-      // =======================================================
-
-      // Function for robust API calls with exponential backoff
-      async function callApiWithBackoff(apiCall, maxRetries = 5, delay = 1000) {
-          for (let i = 0; i < maxRetries; i++) {
-              try {
-                  return await apiCall();
-              } catch (error) {
-                  if (i === maxRetries - 1) throw error;
-                  await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
-              }
-          }
-      }
-
-      const handleNavigation = (target) => {
-          if (target === "home") window.location.href = "home.html";
-          if (target === "signup") window.location.href = "register.html";
-      };
-
-      // =======================================================
-      // MAIN INITIALIZATION & LOGIN LOGIC
-      // =======================================================
-      document.addEventListener("DOMContentLoaded", async () => {
-          // Initialize Firebase and initial authentication
-          try {
-              app = initializeApp(firebaseConfig);
-              rtdb = getDatabase(app); 
-              auth = getAuth(app);
-              
-              if (initialAuthToken) {
-                  await signInWithCustomToken(auth, initialAuthToken);
-              } else {
-                  await signInAnonymously(auth);
-              }
-          } catch (error) {
-              console.error("Firebase initialization failed:", error);
-              showMessage("Failed to initialize Firebase services. Check console for details.", true);
-          }
-
-          // Attach event listeners for navigation
-          document.getElementById("logo-home").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("home"); });
-          document.getElementById("nav-home").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("home"); });
-          document.getElementById("btn-signup").addEventListener("click", (e) => { e.preventDefault(); handleNavigation("signup"); });
-
-          // Password Visibility Toggle
-          const togglePassword = document.getElementById('toggle-password');
-          if (togglePassword) {
-            togglePassword.addEventListener('click', () => {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                togglePassword.classList.toggle('fa-eye');
-                togglePassword.classList.toggle('fa-eye-slash');
-            });
-          }
-
-          // 2. Login Form Handler
-          if (loginForm) {
-              loginForm.addEventListener('submit', async (e) => {
-                  e.preventDefault();
-                  hideMessage();
-
-                  const email = emailInput.value.trim(); // This input is used for the email
-                  const password = passwordInput.value;
-
-                  if (!email || !password) {
-                      showMessage('Please enter both email/username and password.', true);
-                      return;
-                  }
-
-                  loginButton.disabled = true;
-                  loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
-
-                  try {
-                      // STEP 1: Authenticate the user with Firebase Auth
-                      const userCredential = await callApiWithBackoff(() => signInWithEmailAndPassword(auth, email, password));
-                      const user = userCredential.user;
-                      
-                      // STEP 2: Check Realtime Database for authorized role (admin or registrar)
-                      const dbRef = ref(rtdb);
-                      let userRole = null;
-                      let roleData = null;
-                      
-                      // Check for admin role
-                      const adminSnapshot = await callApiWithBackoff(() => get(child(dbRef, `staff/admin/${user.uid}`)));
-                      
-                      if (adminSnapshot.exists()) {
-                          userRole = 'Admin';
-                          roleData = adminSnapshot.val();
-                      } else {
-                          // Check for registrar role only if not admin
-                          const registrarSnapshot = await callApiWithBackoff(() => get(child(dbRef, `staff/registrar/${user.uid}`)));
-                          if (registrarSnapshot.exists()) {
-                              userRole = 'Registrar';
-                              roleData = registrarSnapshot.val();
-                          }
-                      }
-
-                      // STEP 3: Enforce Role Authorization
-                      if (userRole) {
-                          // Success: User is an authorized staff member
-                          const fullName = roleData.fullName || email;
-                          showMessage(`Login successful! Welcome, ${fullName} (${userRole}). Redirecting to dashboard...`);
-                          
-                          // Redirect to the protected area
-                          setTimeout(() => {
-                              window.location.href = "adminview/dashboard.html"; 
-                          }, 2000);
-
-                      } else {
-                          // Failure: User is NOT authorized for this portal (e.g., they are a normal user)
-                          await callApiWithBackoff(() => signOut(auth)); // Sign them out immediately
-                          throw new Error("unauthorized-staff");
-                      }
-
-                  } catch (error) {
-                      console.error("Login failed:", error);
-                      let errorMessage = "Login failed. Please check your credentials.";
-                      
-                      if (error.code) {
-                          switch (error.code) {
-                              case 'auth/user-not-found':
-                              case 'auth/wrong-password':
-                              case 'auth/invalid-login-credentials': // Catching the generic invalid credentials error
-                                  errorMessage = "Account not found or invalid account."; // User-friendly message
-                                  break;
-                              case 'auth/invalid-email':
-                                  errorMessage = "The email format is incorrect.";
-                                  break;
-                              case 'auth/too-many-requests':
-                                  errorMessage = "Access blocked temporarily due to too many failed attempts.";
-                                  break;
-                              default:
-                                  // Generic catch-all to hide raw Firebase error messages
-                                  errorMessage = "An unexpected server error occurred during login. Please try again.";
-                                  break;
-                          }
-                      } else if (error.message === "unauthorized-staff") {
-                          errorMessage = "Access Denied: Your account is not authorized for the Admin/Registrar portal.";
-                      }
-                      
-                      showMessage(errorMessage, true); // Display error flag
-                      
-                  } finally {
-                      loginButton.disabled = false;
-                      loginButton.innerHTML = '<i class="fas fa-right-to-bracket"></i> Log In';
-                  }
-              });
-          }
-      });
-    </script>
   </body>
 </html>
